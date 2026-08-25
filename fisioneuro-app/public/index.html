@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>FisioNeuro - Gestión Clínica</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 30px auto; padding: 20px; background: #f8f9fa; }
+    h1 { color: #0d6efd; text-align: center; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    input { width: 97%; padding: 8px; margin: 6px 0; display: block; }
+    button { background: #0d6efd; color: white; border: none; padding: 10px 15px; cursor: pointer; width: 100%; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
+    th { background: #0d6efd; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Sistema Clínica FisioNeuro</h1>
+
+  <div class="card">
+    <h2>Registrar Nuevo Paciente</h2>
+    <form id="formPaciente">
+      <input type="text" id="cedula" placeholder="Cédula" required>
+      <input type="text" id="nombre" placeholder="Nombre" required>
+      <input type="text" id="apellido" placeholder="Apellido" required>
+      <input type="date" id="fecha_nacimiento" required>
+      <input type="text" id="telefono" placeholder="Teléfono">
+      <input type="email" id="email" placeholder="Correo Electrónico">
+      <input type="text" id="direccion" placeholder="Dirección">
+      <button type="submit">Guardar Paciente</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Listado de Pacientes</h2>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Cédula</th><th>Nombre</th><th>Teléfono</th><th>Email</th></tr>
+      </thead>
+      <tbody id="tablaPacientes"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const form = document.getElementById('formPaciente');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const datos = {
+        cedula: document.getElementById('cedula').value,
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
+        telefono: document.getElementById('telefono').value,
+        email: document.getElementById('email').value,
+        direccion: document.getElementById('direccion').value
+      };
+      await fetch('/api/pacientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      });
+      form.reset();
+      cargarPacientes();
+    });
+
+    async function cargarPacientes() {
+      const res = await fetch('/api/pacientes');
+      const pacientes = await res.json();
+      const tbody = document.getElementById('tablaPacientes');
+      tbody.innerHTML = '';
+      pacientes.forEach(p => {
+        tbody.innerHTML += `<tr><td>${p.id}</td><td>${p.cedula}</td><td>${p.nombre} ${p.apellido}</td><td>${p.telefono||'-'}</td><td>${p.email||'-'}</td></tr>`;
+      });
+    }
+    cargarPacientes();
+  </script>
+</body>
+</html>
