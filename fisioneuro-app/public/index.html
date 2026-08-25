@@ -2,77 +2,204 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>FisioNeuro - Gestión Clínica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FisioNeuro - Sistema de Gestión Médica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; max-width: 900px; margin: 30px auto; padding: 20px; background: #f8f9fa; }
-    h1 { color: #0d6efd; text-align: center; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    input { width: 97%; padding: 8px; margin: 6px 0; display: block; }
-    button { background: #0d6efd; color: white; border: none; padding: 10px 15px; cursor: pointer; width: 100%; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
-    th { background: #0d6efd; color: white; }
+    body { background-color: #f4f6f9; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .sidebar { min-height: 100vh; background: #0f172a; color: white; }
+    .sidebar .nav-link { color: #94a3b8; padding: 12px 20px; margin: 4px 0; border-radius: 8px; }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover { background: #0d6efd; color: white; }
+    .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .login-card { max-width: 420px; margin: 80px auto; border-radius: 16px; }
   </style>
 </head>
 <body>
-  <h1>Sistema Clínica FisioNeuro</h1>
 
-  <div class="card">
-    <h2>Registrar Nuevo Paciente</h2>
-    <form id="formPaciente">
-      <input type="text" id="cedula" placeholder="Cédula" required>
-      <input type="text" id="nombre" placeholder="Nombre" required>
-      <input type="text" id="apellido" placeholder="Apellido" required>
-      <input type="date" id="fecha_nacimiento" required>
-      <input type="text" id="telefono" placeholder="Teléfono">
-      <input type="email" id="email" placeholder="Correo Electrónico">
-      <input type="text" id="direccion" placeholder="Dirección">
-      <button type="submit">Guardar Paciente</button>
-    </form>
+  <!-- 1. PANTALLA DE LOGIN UNIFICADO -->
+  <div id="sec-login" class="container">
+    <div class="card card-custom login-card p-4 bg-white">
+      <div class="text-center mb-4">
+        <i class="bi bi-heart-pulse-fill text-primary display-4"></i>
+        <h3 class="fw-bold mt-2 text-dark">FisioNeuro</h3>
+        <p class="text-muted small">Ingrese sus credenciales para acceder</p>
+      </div>
+      <form id="formLogin">
+        <div class="mb-3">
+          <label class="form-label font-weight-bold">Usuario / Cédula</label>
+          <input type="text" id="loginUser" class="form-control" placeholder="Admin: Correo | Paciente: Cédula" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Contraseña</label>
+          <input type="password" id="loginPass" class="form-control" placeholder="Cédula o contraseña" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Iniciar Sesión</button>
+      </form>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Listado de Pacientes</h2>
-    <table>
-      <thead>
-        <tr><th>ID</th><th>Cédula</th><th>Nombre</th><th>Teléfono</th><th>Email</th></tr>
-      </thead>
-      <tbody id="tablaPacientes"></tbody>
-    </table>
+  <!-- 2. PANEL DEL ADMINISTRADOR -->
+  <div id="sec-admin" class="d-none">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Menú Lateral -->
+        <div class="col-md-3 col-lg-2 sidebar p-3">
+          <h4 class="text-primary fw-bold text-center my-3"><i class="bi bi-heart-pulse-fill"></i> FisioNeuro</h4>
+          <hr class="text-secondary">
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link active" href="#" onclick="showAdminTab('pacientes')"><i class="bi bi-people me-2"></i> Pacientes</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="showAdminTab('agenda')"><i class="bi bi-calendar-event me-2"></i> Agenda & Google Cal</a></li>
+          </ul>
+          <div class="mt-auto pt-5">
+            <button class="btn btn-outline-danger w-100" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Salir</button>
+          </div>
+        </div>
+
+        <!-- Contenido Admin -->
+        <div class="col-md-9 col-lg-10 p-4">
+          <!-- Vista Pacientes -->
+          <div id="tab-pacientes">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2>Directorio de Pacientes</h2>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoPaciente"><i class="bi bi-person-plus-fill me-1"></i> Nuevo Paciente</button>
+            </div>
+            <div class="card card-custom p-3 bg-white">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr><th>Cédula</th><th>Nombre Completo</th><th>Teléfono</th><th>Email</th><th>Acciones</th></tr>
+                </thead>
+                <tbody id="tablaPacientes"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Vista Agenda Google Calendar -->
+          <div id="tab-agenda" class="d-none">
+            <h2 class="mb-4">Gestión de Citas (Sincronizado con Google Calendar)</h2>
+            <div class="card card-custom p-4 bg-white">
+              <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNuevaCita"><i class="bi bi-calendar-plus"></i> Agendar Cita Manual</button>
+              <iframe src="https://calendar.google.com/calendar/embed?src=en.ecuador%23holiday%40group.v.calendar.google.com&ctz=America%2FGuayaquil" style="border: 0" width="100%" height="500" frameborder="0" scrolling="no"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- 3. PANEL DEL PACIENTE -->
+  <div id="sec-paciente" class="d-none container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Bienvenido, <span id="pacienteNombreText"></span></h2>
+      <button class="btn btn-outline-danger" onclick="logout()">Cerrar Sesión</button>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card card-custom p-4 bg-white mb-4">
+          <h4 class="text-primary mb-3"><i class="bi bi-calendar-plus"></i> Agendar Nueva Cita</h4>
+          <form id="formCitaPaciente">
+            <div class="mb-3">
+              <label class="form-label">Fecha y Hora Preferida</label>
+              <input type="datetime-local" id="citaFecha" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Motivo de Consulta / Molestia</label>
+              <textarea id="citaMotivo" class="form-control" rows="3" placeholder="Ej: Dolor lumbar intenso..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-bold">Confirmar Cita</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRAR PACIENTE -->
+  <div class="modal fade" id="modalNuevoPaciente" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Registrar Nuevo Paciente</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <form id="formNuevoPaciente">
+            <input type="text" id="pCedula" class="form-control mb-2" placeholder="Cédula (Servirá de usuario y clave)" required>
+            <input type="text" id="pNombre" class="form-control mb-2" placeholder="Nombre" required>
+            <input type="text" id="pApellido" class="form-control mb-2" placeholder="Apellido" required>
+            <input type="date" id="pFecha" class="form-control mb-2" required>
+            <input type="text" id="pTel" class="form-control mb-2" placeholder="Teléfono">
+            <input type="email" id="pEmail" class="form-control mb-2" placeholder="Correo electrónico">
+            <button type="submit" class="btn btn-primary w-100 mt-2">Guardar Paciente</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const form = document.getElementById('formPaciente');
-    form.addEventListener('submit', async (e) => {
+    let userSesion = null;
+
+    document.getElementById('formLogin').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const datos = {
-        cedula: document.getElementById('cedula').value,
-        nombre: document.getElementById('nombre').value,
-        apellido: document.getElementById('apellido').value,
-        fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
-        telefono: document.getElementById('telefono').value,
-        email: document.getElementById('email').value,
-        direccion: document.getElementById('direccion').value
-      };
-      await fetch('/api/pacientes', {
+      const usuario = document.getElementById('loginUser').value;
+      const password = document.getElementById('loginPass').value;
+
+      const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(datos)
+        body: JSON.stringify({ usuario, password })
       });
-      form.reset();
-      cargarPacientes();
+
+      if (res.ok) {
+        userSesion = await res.json();
+        document.getElementById('sec-login').classList.add('d-none');
+        if (userSesion.rol === 'administrador') {
+          document.getElementById('sec-admin').classList.remove('d-none');
+          cargarPacientes();
+        } else {
+          document.getElementById('sec-paciente').classList.remove('d-none');
+          document.getElementById('pacienteNombreText').innerText = userSesion.nombre;
+        }
+      } else {
+        alert('Credenciales inválidas');
+      }
     });
 
     async function cargarPacientes() {
       const res = await fetch('/api/pacientes');
-      const pacientes = await res.json();
-      const tbody = document.getElementById('tablaPacientes');
-      tbody.innerHTML = '';
-      pacientes.forEach(p => {
-        tbody.innerHTML += `<tr><td>${p.id}</td><td>${p.cedula}</td><td>${p.nombre} ${p.apellido}</td><td>${p.telefono||'-'}</td><td>${p.email||'-'}</td></tr>`;
-      });
+      const data = await res.json();
+      document.getElementById('tablaPacientes').innerHTML = data.map(p => `
+        <tr>
+          <td>${p.cedula}</td>
+          <td><b>${p.nombre} ${p.apellido}</b></td>
+          <td>${p.telefono || '-'}</td>
+          <td>${p.email || '-'}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-file-earmark-medical"></i> Historia</button>
+          </td>
+        </tr>
+      `).join('');
     }
-    cargarPacientes();
+
+    document.getElementById('formNuevoPaciente').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const body = {
+        cedula: document.getElementById('pCedula').value,
+        nombre: document.getElementById('pNombre').value,
+        apellido: document.getElementById('pApellido').value,
+        fecha_nacimiento: document.getElementById('pFecha').value,
+        telefono: document.getElementById('pTel').value,
+        email: document.getElementById('pEmail').value
+      };
+      await fetch('/api/pacientes', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+      location.reload();
+    });
+
+    function showAdminTab(tab) {
+      document.getElementById('tab-pacientes').classList.add('d-none');
+      document.getElementById('tab-agenda').classList.add('d-none');
+      document.getElementById(`tab-${tab}`).classList.remove('d-none');
+    }
+
+    function logout() { location.reload(); }
   </script>
 </body>
 </html>
