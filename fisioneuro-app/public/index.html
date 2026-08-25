@@ -179,6 +179,7 @@
       `).join('');
     }
 
+    // REGISTRO DE PACIENTES SIN RECARGA DE PÁGINA
     document.getElementById('formNuevoPaciente').addEventListener('submit', async (e) => {
       e.preventDefault();
       const body = {
@@ -189,8 +190,27 @@
         telefono: document.getElementById('pTel').value,
         email: document.getElementById('pEmail').value
       };
-      await fetch('/api/pacientes', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
-      location.reload();
+
+      const res = await fetch('/api/pacientes', { 
+        method: 'POST', 
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify(body) 
+      });
+
+      if (res.ok) {
+        // 1. Limpiar campos del formulario
+        document.getElementById('formNuevoPaciente').reset();
+
+        // 2. Ocultar la ventana Modal de Bootstrap
+        const modalElement = document.getElementById('modalNuevoPaciente');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance.hide();
+
+        // 3. Recargar únicamente la lista de pacientes en la tabla
+        cargarPacientes();
+      } else {
+        alert('Error al registrar paciente');
+      }
     });
 
     function showAdminTab(tab) {
