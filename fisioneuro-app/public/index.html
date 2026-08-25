@@ -12,11 +12,48 @@
     .sidebar .nav-link { color: #94a3b8; padding: 12px 20px; margin: 4px 0; border-radius: 8px; }
     .sidebar .nav-link.active, .sidebar .nav-link:hover { background: #0d6efd; color: white; }
     .custom-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-card { width: 100%; max-width: 420px; padding: 2rem; border-radius: 16px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
   </style>
 </head>
 <body>
 
-  <div class="container-fluid">
+  <!-- VISTA 1: INGRESO / LOGIN (ADMIN Y PACIENTES) -->
+  <div id="vistaLogin" class="container login-container">
+    <div class="login-card">
+      <div class="text-center mb-4">
+        <h3 class="text-primary fw-bold"><i class="bi bi-heart-pulse-fill me-2"></i>FisioNeuro</h3>
+        <p class="text-muted small">Acceso al Sistema de Gestión Médica</p>
+      </div>
+
+      <form id="formLogin" onsubmit="iniciarSesion(event)">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Tipo de Usuario</label>
+          <select id="loginRol" class="form-select" onchange="cambiarTipoLogin(this.value)" required>
+            <option value="admin">Administrador / Especialista</option>
+            <option value="paciente">Paciente</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label id="lblUsuario" class="form-label fw-bold">Correo Electrónico</label>
+          <input type="text" id="loginUsuario" class="form-control" placeholder="admin@fisioneuro.com" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Contraseña / Cédula</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- VISTA 2: PANEL DE ADMINISTRACIÓN / PACIENTES (OCULTO AL INICIO) -->
+  <div id="vistaDashboard" class="container-fluid d-none">
     <div class="row">
       <!-- SIDEBAR -->
       <div class="col-md-2 sidebar p-3 d-flex flex-column justify-content-between">
@@ -31,7 +68,9 @@
             </li>
           </ul>
         </div>
-        <button class="btn btn-outline-danger w-100"><i class="bi bi-box-arrow-right me-2"></i>Salir</button>
+        <button class="btn btn-outline-danger w-100" onclick="cerrarSesion()">
+          <i class="bi bi-box-arrow-right me-2"></i>Salir
+        </button>
       </div>
 
       <!-- MAIN CONTENT -->
@@ -246,7 +285,32 @@
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Abrir Historia Clínica autocompletando los datos del paciente
+    // Control de Inicio y Cierre de Sesión
+    function cambiarTipoLogin(rol) {
+      const lblUsuario = document.getElementById('lblUsuario');
+      const inputUsuario = document.getElementById('loginUsuario');
+      if (rol === 'paciente') {
+        lblUsuario.innerText = 'Número de Cédula / Email';
+        inputUsuario.placeholder = '1850489434';
+      } else {
+        lblUsuario.innerText = 'Correo Electrónico';
+        inputUsuario.placeholder = 'admin@fisioneuro.com';
+      }
+    }
+
+    function iniciarSesion(e) {
+      e.preventDefault();
+      document.getElementById('vistaLogin').classList.add('d-none');
+      document.getElementById('vistaDashboard').classList.remove('d-none');
+    }
+
+    function cerrarSesion() {
+      document.getElementById('formLogin').reset();
+      document.getElementById('vistaDashboard').classList.add('d-none');
+      document.getElementById('vistaLogin').classList.remove('d-none');
+    }
+
+    // Modal Historia Clínica
     function abrirHistoria(cedula, nombre, celular) {
       document.getElementById('hcFechaApertura').valueAsDate = new Date();
       document.getElementById('hcCedula').value = cedula;
@@ -257,7 +321,7 @@
       modal.show();
     }
 
-    // Abrir Seguimiento
+    // Modal Seguimiento
     function abrirSeguimiento(cedula) {
       document.getElementById('segFecha').valueAsDate = new Date();
       const modal = new bootstrap.Modal(document.getElementById('modalSeguimiento'));
