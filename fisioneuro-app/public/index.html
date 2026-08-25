@@ -59,11 +59,11 @@
               <tbody id="tablaPacientes">
                 <tr>
                   <td>1850489434</td>
-                  <td><b>Rubén Alejandro Medina Montero</b></td>
+                  <td><b>Ruben Alejandro Medina Montero</b></td>
                   <td>0993037447</td>
                   <td>rubenalejandromedinamontero@gmail.com</td>
                   <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('1850489434')">
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('1850489434', 'Ruben Alejandro Medina Montero', '0993037447')">
                       <i class="bi bi-file-earmark-medical"></i> Historia
                     </button>
                     <button class="btn btn-sm btn-outline-success" onclick="abrirSeguimiento('1850489434')">
@@ -77,7 +77,7 @@
                   <td>0988168010</td>
                   <td>andersonmedina1998@gmail.com</td>
                   <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('1804620803')">
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('1804620803', 'Anderson Medina', '0988168010')">
                       <i class="bi bi-file-earmark-medical"></i> Historia
                     </button>
                     <button class="btn btn-sm btn-outline-success" onclick="abrirSeguimiento('1804620803')">
@@ -103,7 +103,7 @@
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs mb-3" id="historiaTabs" role="tablist">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-filiacion">1. Filiación y Anamnesis</button></li>
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-filiacion">1. Datos del Paciente</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dolor">2. Dolor y Multimedia</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-evaluacion">3. Evaluación Física y Goniometría</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-plan">4. Diagnóstico y Plan</button></li>
@@ -111,25 +111,35 @@
 
           <form id="formHistoriaClinica">
             <div class="tab-content">
-              <!-- PESTAÑA 1 -->
+              <!-- PESTAÑA 1: DATOS DEL PACIENTE Y ANAMNESIS -->
               <div class="tab-pane fade show active" id="tab-filiacion">
+                <h6 class="fw-bold text-primary mb-3">Apertura y Datos de Filiación</h6>
                 <div class="row g-3">
-                  <div class="col-md-3"><label class="form-label fw-bold">Fecha Apertura</label><input type="date" id="hcFechaApertura" class="form-control" required></div>
-                  <div class="col-md-3"><label class="form-label fw-bold">Edad</label><input type="number" id="hcEdad" class="form-control"></div>
+                  <div class="col-md-4"><label class="form-label fw-bold">Fecha Apertura Historia</label><input type="date" id="hcFechaApertura" class="form-control" required></div>
+                  <div class="col-md-4"><label class="form-label fw-bold">Número de Cédula</label><input type="text" id="hcCedula" class="form-control" readonly></div>
+                  <div class="col-md-4"><label class="form-label fw-bold">Nombre Completo</label><input type="text" id="hcNombre" class="form-control" readonly></div>
+                  
+                  <div class="col-md-3"><label class="form-label fw-bold">Fecha de Nacimiento</label><input type="date" id="hcFechaNacimiento" class="form-control"></div>
+                  <div class="col-md-2"><label class="form-label fw-bold">Edad</label><input type="number" id="hcEdad" class="form-control"></div>
                   <div class="col-md-3">
                     <label class="form-label fw-bold">Género</label>
                     <select id="hcGenero" class="form-select"><option>Masculino</option><option>Femenino</option><option>Otro</option></select>
                   </div>
-                  <div class="col-md-3"><label class="form-label fw-bold">Ocupación</label><input type="text" id="hcOcupacion" class="form-control"></div>
+                  <div class="col-md-4"><label class="form-label fw-bold">Celular / Teléfono</label><input type="text" id="hcCelular" class="form-control"></div>
+                  
+                  <div class="col-md-6"><label class="form-label fw-bold">Ocupación</label><input type="text" id="hcOcupacion" class="form-control"></div>
                   <div class="col-md-6"><label class="form-label fw-bold">Médico Tratante</label><input type="text" id="hcMedico" class="form-control"></div>
-                  <div class="col-md-6"><label class="form-label fw-bold">Diagnóstico Médico</label><input type="text" id="hcDiagMedico" class="form-control"></div>
+
+                  <h6 class="fw-bold text-primary mt-4 mb-2">Anamnesis e Historial Clínico</h6>
+                  <div class="col-12"><label class="form-label fw-bold">Diagnóstico Médico</label><input type="text" id="hcDiagMedico" class="form-control"></div>
                   <div class="col-12"><label class="form-label fw-bold">Motivo de Consulta</label><textarea id="hcMotivo" class="form-control" rows="2"></textarea></div>
-                  <div class="col-md-6"><label class="form-label fw-bold">Enfermedades Previas / Quirúrgicas</label><textarea id="hcAntecedentesPat" class="form-control" rows="2"></textarea></div>
+                  <div class="col-md-6"><label class="form-label fw-bold">Antecedentes Personales / Intervenciones Quirúrgicas</label><textarea id="hcAntecedentesPat" class="form-control" rows="2"></textarea></div>
                   <div class="col-md-6"><label class="form-label fw-bold">Medicamentos Actuales y Alergias</label><textarea id="hcMedicamentosAlergias" class="form-control" rows="2"></textarea></div>
+                  <div class="col-12"><label class="form-label fw-bold">Antecedentes Familiares</label><textarea id="hcAntecedentesFam" class="form-control" rows="2"></textarea></div>
                 </div>
               </div>
 
-              <!-- PESTAÑA 2 -->
+              <!-- PESTAÑA 2: ESCALA DE DOLOR Y MULTIMEDIA -->
               <div class="tab-pane fade" id="tab-dolor">
                 <div class="mb-4">
                   <label class="form-label fw-bold">Escala Visual Analógica del Dolor (EVA): <span id="evaValor" class="badge bg-danger fs-6">5</span>/10</label>
@@ -147,7 +157,7 @@
                 </div>
               </div>
 
-              <!-- PESTAÑA 3 -->
+              <!-- PESTAÑA 3: EVALUACIÓN FÍSICA Y GONIOMETRÍA -->
               <div class="tab-pane fade" id="tab-evaluacion">
                 <h6 class="fw-bold text-primary">Evaluación Goniométrica (A.M.A.)</h6>
                 <div class="table-responsive mb-3">
@@ -173,7 +183,7 @@
                 </div>
               </div>
 
-              <!-- PESTAÑA 4 -->
+              <!-- PESTAÑA 4: DIAGNÓSTICO Y PLAN -->
               <div class="tab-pane fade" id="tab-plan">
                 <div class="mb-3"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
                 <div class="mb-3"><label class="form-label fw-bold">Plan de Tratamiento Aplicado</label><textarea id="hcTratamiento" class="form-control" rows="2"></textarea></div>
@@ -236,12 +246,18 @@
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    function abrirHistoria(cedula) {
+    // Abrir Historia Clínica autocompletando los datos del paciente
+    function abrirHistoria(cedula, nombre, celular) {
       document.getElementById('hcFechaApertura').valueAsDate = new Date();
+      document.getElementById('hcCedula').value = cedula;
+      document.getElementById('hcNombre').value = nombre;
+      document.getElementById('hcCelular').value = celular || '';
+
       const modal = new bootstrap.Modal(document.getElementById('modalHistoriaClinica'));
       modal.show();
     }
 
+    // Abrir Seguimiento
     function abrirSeguimiento(cedula) {
       document.getElementById('segFecha').valueAsDate = new Date();
       const modal = new bootstrap.Modal(document.getElementById('modalSeguimiento'));
