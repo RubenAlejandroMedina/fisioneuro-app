@@ -11,34 +11,33 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Login unificado con soporte para nombres de columnas en español e inglés
+// Login unificado flexible
 app.post('/api/login', async (req, res) => {
-  const { usuario, password } = req.body;
+  // Acepta 'usuario' o 'email' indistintamente
+  const identificador = req.body.usuario || req.body.email;
+  const password = req.body.password;
+
+  if (!identificador || !password) {
+    return res.status(400).json({ error: 'Faltan datos de inicio de sesión' });
+  }
+
   try {
-    // Busca por 'email' o 'correo electrónico' y compara contraseña
     const result = await pool.query(
-      `SELECT * FROM usuarios 
-       WHERE (LOWER(email) = LOWER($1) OR LOWER("correo electrónico") = LOWER($1))`,
-      [usuario]
+      'SELECT * FROM usuarios WHERE LOWER(email) = LOWER($1) AND password_hash = $2',
+      [identificador, password]
     );
 
     if (result.rows.length === 0) {
-      return res.status(401).json({ error: 'Cédula/Correo no encontrado' });
+      return res.status(401).json({ error: 'Cédula/Correo o contraseña incorrectos' });
     }
 
     const u = result.rows[0];
-    const passBD = u.password_hash || u["contraseña_hash"] || u.password;
-
-    if (passBD !== password) {
-      return res.status(401).json({ error: 'Contraseña incorrecta' });
-    }
-
     res.json({
       id: u.id,
       nombre: u.nombre,
       apellido: u.apellido,
       rol: u.rol,
-      cedula: u.email || u["correo electrónico"]
+      cedula: u.email
     });
   } catch (err) {
     console.error("Error en login:", err);
@@ -46,7 +45,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Obtener Pacientes
+// Directorio de Pacientes
 app.get('/api/pacientes', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM pacientes ORDER BY id DESC');
@@ -56,18 +55,16 @@ app.get('/api/pacientes', async (req, res) => {
   }
 });
 
-// Crear Paciente
+// Crear Paciente (y su usuario correspondiente)
 app.post('/api/pacientes', async (req, res) => {
   const { cedula, nombre, apellido, fecha_nacimiento, telefono, email, direccion } = req.body;
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     
-    // Crear en usuarios adaptándose a la estructura
     await client.query(
       `INSERT INTO usuarios (nombre, apellido, email, password_hash, rol) 
-       VALUES ($1, $2, $3, $4, 'paciente') 
-       ON CONFLICT DO NOTHING`,
+       VALUES ($1, $2, $3, $4, 'paciente') ON CONFLICT (email) DO NOTHING`,
       [nombre, apellido, cedula, cedula]
     );
 
@@ -76,7 +73,7 @@ app.post('/api/pacientes', async (req, res) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
       [cedula, nombre, apellido, fecha_nacimiento, telefono, email, direccion]
     );
-    
+
     await client.query('COMMIT');
     res.status(201).json(pac.rows[0]);
   } catch (err) {
@@ -87,34 +84,5 @@ app.post('/api/pacientes', async (req, res) => {
   }
 });
 
-// Agendar Cita
-app.post('/api/citas', async (req, res) => {
-  const { paciente_id, fisioterapeuta_id, fecha_hora, motivo } = req.body;
-  try {
-    const result = await pool.query(
-      'INSERT INTO citas (paciente_id, fisioterapeuta_id, fecha_hora, motivo, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [paciente_id, fisioterapeuta_id || 1, fecha_hora, motivo, 'confirmada']
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Historia Clínica
-app.post('/api/historias', async (req, res) => {
-  const { paciente_id, fisioterapeuta_id, motivo_consulta, diagnostico, observaciones } = req.body;
-  try {
-    const result = await pool.query(
-      `INSERT INTO historias_clinicas (paciente_id, fisioterapeuta_id, motivo_consulta, diagnostico, observaciones) 
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [paciente_id, fisioterapeuta_id || 1, motivo_consulta, diagnostico, observaciones]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`FisioNeuro Pro activo en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`FisioNeuro activo en puerto ${PORT}`));
