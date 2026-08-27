@@ -18,7 +18,7 @@
 </head>
 <body>
 
-  <!-- VISTA 1: INGRESO / LOGIN (ADMIN Y PACIENTES) -->
+  <!-- VISTA 1: INGRESO / LOGIN -->
   <div id="vistaLogin" class="container login-container">
     <div class="login-card">
       <div class="text-center mb-4">
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <!-- VISTA 2: PANEL DE ADMINISTRACIÓN / PACIENTES (OCULTO AL INICIO) -->
+  <!-- VISTA 2: PANEL DE ADMINISTRACIÓN / PACIENTES -->
   <div id="vistaDashboard" class="container-fluid d-none">
     <div class="row">
       <!-- SIDEBAR -->
@@ -150,7 +150,7 @@
 
           <form id="formHistoriaClinica">
             <div class="tab-content">
-              <!-- PESTAÑA 1: DATOS DEL PACIENTE Y ANAMNESIS -->
+              <!-- PESTAÑA 1 -->
               <div class="tab-pane fade show active" id="tab-filiacion">
                 <h6 class="fw-bold text-primary mb-3">Apertura y Datos de Filiación</h6>
                 <div class="row g-3">
@@ -178,43 +178,19 @@
                 </div>
               </div>
 
-              <!-- PESTAÑA 2: ESCALA DE DOLOR Y MULTIMEDIA -->
+              <!-- PESTAÑA 2 -->
               <div class="tab-pane fade" id="tab-dolor">
                 <div class="mb-4">
                   <label class="form-label fw-bold">Escala Visual Analógica del Dolor (EVA): <span id="evaValor" class="badge bg-danger fs-6">5</span>/10</label>
                   <input type="range" class="form-range" min="0" max="10" step="1" id="hcRangoDolor" value="5" oninput="document.getElementById('evaValor').innerText = this.value">
-                  <div class="d-flex justify-content-between text-muted small">
-                    <span>0 - Sin dolor (Leve)</span>
-                    <span>5 - Dolor Moderado</span>
-                    <span>10 - Dolor Insoportable (Intenso)</span>
-                  </div>
                 </div>
                 <div class="row g-3">
-                  <div class="col-md-6"><label class="form-label fw-bold">Imágenes Diagnósticas</label><input type="file" class="form-control" id="hcImgDiagnostica" accept="image/*" multiple></div>
-                  <div class="col-md-6"><label class="form-label fw-bold">Video Análisis de Marcha / Postura</label><input type="file" class="form-control" id="hcVideoMarcha" accept="video/*"></div>
                   <div class="col-12"><label class="form-label fw-bold">Ayudas Técnicas Actuales</label><input type="text" class="form-control" id="hcAyudasTecnicas" placeholder="Ej: Muletas, bastón, ortesis..."></div>
                 </div>
               </div>
 
-              <!-- PESTAÑA 3: EVALUACIÓN FÍSICA Y GONIOMETRÍA -->
+              <!-- PESTAÑA 3 -->
               <div class="tab-pane fade" id="tab-evaluacion">
-                <h6 class="fw-bold text-primary">Evaluación Goniométrica (A.M.A.)</h6>
-                <div class="table-responsive mb-3">
-                  <table class="table table-sm table-bordered text-center align-middle">
-                    <thead class="table-light">
-                      <tr><th>Segmento</th><th>Movimiento / Grados Normales</th><th>Derecho (°/A.M.A)</th><th>Izquierdo (°/A.M.A)</th></tr>
-                    </thead>
-                    <tbody>
-                      <tr><td rowspan="2">Columna Cervical</td><td>Flexión (0° - 45°) / Extensión (0° - 45°)</td><td><input type="text" class="form-control form-control-sm"></td><td><input type="text" class="form-control form-control-sm"></td></tr>
-                      <tr><td>Rotación Der/Izq (0° - 60°)</td><td><input type="text" class="form-control form-control-sm"></td><td><input type="text" class="form-control form-control-sm"></td></tr>
-                      <tr><td rowspan="2">Hombro</td><td>Flexión (0° - 180°) / Extensión (0° - 60°)</td><td><input type="text" class="form-control form-control-sm"></td><td><input type="text" class="form-control form-control-sm"></td></tr>
-                      <tr><td>Abducción (0° - 180°) / Adrucción (0°)</td><td><input type="text" class="form-control form-control-sm"></td><td><input type="text" class="form-control form-control-sm"></td></tr>
-                      <tr><td rowspan="2">Cadera</td><td>Flexión (0° - 120°) / Extensión (0° - 30°)</td><td><input type="text" class="form-control form-control-sm"></td><td><input type="text" class="form-control form-control-sm"></td></tr>
-                      <tr><td>Abducción (0° - 30°) / Adducción (0° - 45°)</td><td><input type="text" class="form-control form-control-sm"></td><td><input type="text" class="form-control form-control-sm"></td></tr>
-                      <tr><td>Rodilla</td><td>Flexión (0° - 135°) / Extensión (0° - 10°)</td><td><input type="text" class="form-control form-control-sm"></td><td><input type="text" class="form-control form-control-sm"></td></tr>
-                    </tbody>
-                  </table>
-                </div>
                 <div class="row g-3">
                   <div class="col-md-4"><label class="form-label fw-bold">Tono Muscular</label><input type="text" class="form-control" id="hcTono"></div>
                   <div class="col-md-4"><label class="form-label fw-bold">Reflejos</label><input type="text" class="form-control" id="hcReflejos"></div>
@@ -222,7 +198,7 @@
                 </div>
               </div>
 
-              <!-- PESTAÑA 4: DIAGNÓSTICO Y PLAN -->
+              <!-- PESTAÑA 4 -->
               <div class="tab-pane fade" id="tab-plan">
                 <div class="mb-3"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
                 <div class="mb-3"><label class="form-label fw-bold">Plan de Tratamiento Aplicado</label><textarea id="hcTratamiento" class="form-control" rows="2"></textarea></div>
@@ -249,6 +225,9 @@
         </div>
         <div class="modal-body">
           <form id="formSeguimiento" class="bg-light p-3 rounded mb-4">
+            <!-- Campo oculto para saber a qué paciente pertenece -->
+            <input type="hidden" id="segCedulaPaciente">
+            
             <h6 class="fw-bold mb-3">Registrar Nueva Sesión</h6>
             <div class="row g-2">
               <div class="col-md-4"><label class="form-label small">Fecha de Sesión</label><input type="date" id="segFecha" class="form-control form-control-sm" required></div>
@@ -282,10 +261,8 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Control de Inicio y Cierre de Sesión
     function cambiarTipoLogin(rol) {
       const lblUsuario = document.getElementById('lblUsuario');
       const inputUsuario = document.getElementById('loginUsuario');
@@ -310,28 +287,139 @@
       document.getElementById('vistaLogin').classList.remove('d-none');
     }
 
-    // Modal Historia Clínica
+    // ABRIR Y CARGAR HISTORIA CLÍNICA
     function abrirHistoria(cedula, nombre, celular) {
+      document.getElementById('formHistoriaClinica').reset();
+      
       document.getElementById('hcFechaApertura').valueAsDate = new Date();
       document.getElementById('hcCedula').value = cedula;
       document.getElementById('hcNombre').value = nombre;
       document.getElementById('hcCelular').value = celular || '';
 
+      const datosGuardados = localStorage.getItem('historia_' + cedula);
+      if (datosGuardados) {
+        const hc = JSON.parse(datosGuardados);
+        document.getElementById('hcFechaNacimiento').value = hc.fechaNacimiento || '';
+        document.getElementById('hcEdad').value = hc.edad || '';
+        document.getElementById('hcGenero').value = hc.genero || 'Masculino';
+        document.getElementById('hcOcupacion').value = hc.ocupacion || '';
+        document.getElementById('hcMedico').value = hc.medico || '';
+        document.getElementById('hcDiagMedico').value = hc.diagMedico || '';
+        document.getElementById('hcMotivo').value = hc.motivo || '';
+        document.getElementById('hcAntecedentesPat').value = hc.antecedentesPat || '';
+        document.getElementById('hcMedicamentosAlergias').value = hc.medicamentosAlergias || '';
+        document.getElementById('hcAntecedentesFam').value = hc.antecedentesFam || '';
+        document.getElementById('hcRangoDolor').value = hc.dolor || 5;
+        document.getElementById('evaValor').innerText = hc.dolor || 5;
+        document.getElementById('hcAyudasTecnicas').value = hc.ayudasTecnicas || '';
+        document.getElementById('hcTono').value = hc.tono || '';
+        document.getElementById('hcReflejos').value = hc.reflejos || '';
+        document.getElementById('hcSensibilidad').value = hc.sensibilidad || '';
+        document.getElementById('hcDiagFisio').value = hc.diagFisio || '';
+        document.getElementById('hcTratamiento').value = hc.tratamiento || '';
+        document.getElementById('hcEjerciciosCasa').value = hc.ejerciciosCasa || '';
+      }
+
       const modal = new bootstrap.Modal(document.getElementById('modalHistoriaClinica'));
       modal.show();
     }
 
-    // Modal Seguimiento
+    // GUARDAR HISTORIA CLÍNICA
+    document.getElementById('formHistoriaClinica').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const cedula = document.getElementById('hcCedula').value;
+      const datosHistoria = {
+        fechaApertura: document.getElementById('hcFechaApertura').value,
+        fechaNacimiento: document.getElementById('hcFechaNacimiento').value,
+        edad: document.getElementById('hcEdad').value,
+        genero: document.getElementById('hcGenero').value,
+        ocupacion: document.getElementById('hcOcupacion').value,
+        medico: document.getElementById('hcMedico').value,
+        diagMedico: document.getElementById('hcDiagMedico').value,
+        motivo: document.getElementById('hcMotivo').value,
+        antecedentesPat: document.getElementById('hcAntecedentesPat').value,
+        medicamentosAlergias: document.getElementById('hcMedicamentosAlergias').value,
+        antecedentesFam: document.getElementById('hcAntecedentesFam').value,
+        dolor: document.getElementById('hcRangoDolor').value,
+        ayudasTecnicas: document.getElementById('hcAyudasTecnicas').value,
+        tono: document.getElementById('hcTono').value,
+        reflejos: document.getElementById('hcReflejos').value,
+        sensibilidad: document.getElementById('hcSensibilidad').value,
+        diagFisio: document.getElementById('hcDiagFisio').value,
+        tratamiento: document.getElementById('hcTratamiento').value,
+        ejerciciosCasa: document.getElementById('hcEjerciciosCasa').value
+      };
+
+      localStorage.setItem('historia_' + cedula, JSON.stringify(datosHistoria));
+      alert('¡Historia clínica guardada correctamente!');
+      
+      const modalElement = document.getElementById('modalHistoriaClinica');
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      modal.hide();
+    });
+
+    // ABRIR Y CARGAR SEGUIMIENTO Y EVOLUCIÓN
     function abrirSeguimiento(cedula) {
+      document.getElementById('formSeguimiento').reset();
+      document.getElementById('segCedulaPaciente').value = cedula;
       document.getElementById('segFecha').valueAsDate = new Date();
+
+      renderizarTablaSeguimientos(cedula);
+
       const modal = new bootstrap.Modal(document.getElementById('modalSeguimiento'));
       modal.show();
     }
 
+    // FUNCION PARA RECEPTAR Y MOSTRAR LA TABLA DE SESIONES
+    function renderizarTablaSeguimientos(cedula) {
+      const tbody = document.getElementById('listaSeguimientos');
+      tbody.innerHTML = '';
+
+      const registrosGuardados = localStorage.getItem('seguimientos_' + cedula);
+      const seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
+
+      if (seguimientos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin registros de evolución aún</td></tr>';
+        return;
+      }
+
+      seguimientos.forEach(sesion => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${sesion.fecha}</td>
+          <td><span class="badge ${sesion.asistencia === 'Asistió' ? 'bg-success' : 'bg-warning'}">${sesion.asistencia}</span></td>
+          <td>${sesion.evolucion}</td>
+          <td>$${parseFloat(sesion.pago || 0).toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // GUARDAR NUEVA SESIÓN DE SEGUIMIENTO
     document.getElementById('formSeguimiento').addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('Sesión registrada correctamente.');
-      this.reset();
+      e.preventDefault(); // PREVIENE LA RECARGA DE PÁGINA
+
+      const cedula = document.getElementById('segCedulaPaciente').value;
+      const nuevaSesion = {
+        fecha: document.getElementById('segFecha').value,
+        asistencia: document.getElementById('segAsistencia').value,
+        pago: document.getElementById('segPago').value,
+        evolucion: document.getElementById('segEvolucion').value
+      };
+
+      const registrosGuardados = localStorage.getItem('seguimientos_' + cedula);
+      const seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
+
+      seguimientos.push(nuevaSesion);
+      localStorage.setItem('seguimientos_' + cedula, JSON.stringify(seguimientos));
+
+      alert('¡Sesión de seguimiento registrada correctamente!');
+      
+      // Limpiar formulario y recargar la tabla interna
+      document.getElementById('segPago').value = '';
+      document.getElementById('segEvolucion').value = '';
+      renderizarTablaSeguimientos(cedula);
     });
   </script>
 </body>
