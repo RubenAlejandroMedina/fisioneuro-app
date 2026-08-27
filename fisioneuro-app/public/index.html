@@ -77,9 +77,6 @@
       <div class="col-md-10 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2>Directorio de Pacientes</h2>
-          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoPaciente">
-            <i class="bi bi-person-plus-fill me-2"></i>Nuevo Paciente
-          </button>
         </div>
 
         <!-- TABLA DE PACIENTES -->
@@ -142,23 +139,20 @@
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs mb-3" id="historiaTabs" role="tablist">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-filiacion">1. Datos del Paciente</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dolor">2. Dolor y Multimedia</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-evaluacion">3. Evaluación Física y Goniometría</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-plan">4. Diagnóstico y Plan</button></li>
+            <li class="nav-item"><button class="nav-link active" id="btn-tab-form" data-bs-toggle="tab" data-bs-target="#tab-formulario">Formulario de Historia</button></li>
+            <li class="nav-item"><button class="nav-link" id="btn-tab-registros" data-bs-toggle="tab" data-bs-target="#tab-registros">📋 Historias Registradas</button></li>
           </ul>
 
-          <form id="formHistoriaClinica">
-            <div class="tab-content">
-              <!-- PESTAÑA 1 -->
-              <div class="tab-pane fade show active" id="tab-filiacion">
-                <h6 class="fw-bold text-primary mb-3">Apertura y Datos de Filiación</h6>
+          <div class="tab-content">
+            <!-- PESTAÑA 1: FORMULARIO -->
+            <div class="tab-pane fade show active" id="tab-formulario">
+              <form id="formHistoriaClinica">
                 <div class="row g-3">
                   <div class="col-md-4"><label class="form-label fw-bold">Fecha Apertura Historia</label><input type="date" id="hcFechaApertura" class="form-control" required></div>
                   <div class="col-md-4"><label class="form-label fw-bold">Número de Cédula</label><input type="text" id="hcCedula" class="form-control" readonly></div>
                   <div class="col-md-4"><label class="form-label fw-bold">Nombre Completo</label><input type="text" id="hcNombre" class="form-control" readonly></div>
                   
-                  <div class="col-md-3"><label class="form-label fw-bold">Fecha de Nacimiento</label><input type="date" id="hcFechaNacimiento" class="form-control"></div>
+                  <div class="col-md-3"><label class="form-label fw-bold">Fecha Nacimiento</label><input type="date" id="hcFechaNacimiento" class="form-control"></div>
                   <div class="col-md-2"><label class="form-label fw-bold">Edad</label><input type="number" id="hcEdad" class="form-control"></div>
                   <div class="col-md-3">
                     <label class="form-label fw-bold">Género</label>
@@ -172,44 +166,31 @@
                   <h6 class="fw-bold text-primary mt-4 mb-2">Anamnesis e Historial Clínico</h6>
                   <div class="col-12"><label class="form-label fw-bold">Diagnóstico Médico</label><input type="text" id="hcDiagMedico" class="form-control"></div>
                   <div class="col-12"><label class="form-label fw-bold">Motivo de Consulta</label><textarea id="hcMotivo" class="form-control" rows="2"></textarea></div>
-                  <div class="col-md-6"><label class="form-label fw-bold">Antecedentes Personales / Intervenciones Quirúrgicas</label><textarea id="hcAntecedentesPat" class="form-control" rows="2"></textarea></div>
-                  <div class="col-md-6"><label class="form-label fw-bold">Medicamentos Actuales y Alergias</label><textarea id="hcMedicamentosAlergias" class="form-control" rows="2"></textarea></div>
-                  <div class="col-12"><label class="form-label fw-bold">Antecedentes Familiares</label><textarea id="hcAntecedentesFam" class="form-control" rows="2"></textarea></div>
+                  <div class="col-md-6"><label class="form-label fw-bold">Antecedentes Personales / Quirúrgicos</label><textarea id="hcAntecedentesPat" class="form-control" rows="2"></textarea></div>
+                  <div class="col-md-6"><label class="form-label fw-bold">Medicamentos y Alergias</label><textarea id="hcMedicamentosAlergias" class="form-control" rows="2"></textarea></div>
+                  
+                  <h6 class="fw-bold text-primary mt-4 mb-2">Evaluación y Diagnóstico Fisioterapéutico</h6>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Dolor (EVA): <span id="evaValor" class="badge bg-danger">5</span>/10</label>
+                    <input type="range" class="form-range" min="0" max="10" step="1" id="hcRangoDolor" value="5" oninput="document.getElementById('evaValor').innerText = this.value">
+                  </div>
+                  <div class="col-md-6"><label class="form-label fw-bold">Ayudas Técnicas</label><input type="text" class="form-control" id="hcAyudasTecnicas"></div>
+                  <div class="col-12"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
+                  <div class="col-12"><label class="form-label fw-bold">Plan de Tratamiento</label><textarea id="hcTratamiento" class="form-control" rows="2"></textarea></div>
                 </div>
-              </div>
-
-              <!-- PESTAÑA 2 -->
-              <div class="tab-pane fade" id="tab-dolor">
-                <div class="mb-4">
-                  <label class="form-label fw-bold">Escala Visual Analógica del Dolor (EVA): <span id="evaValor" class="badge bg-danger fs-6">5</span>/10</label>
-                  <input type="range" class="form-range" min="0" max="10" step="1" id="hcRangoDolor" value="5" oninput="document.getElementById('evaValor').innerText = this.value">
+                <div class="modal-footer mt-4">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Guardar Historia Clínica</button>
                 </div>
-                <div class="row g-3">
-                  <div class="col-12"><label class="form-label fw-bold">Ayudas Técnicas Actuales</label><input type="text" class="form-control" id="hcAyudasTecnicas" placeholder="Ej: Muletas, bastón, ortesis..."></div>
-                </div>
-              </div>
-
-              <!-- PESTAÑA 3 -->
-              <div class="tab-pane fade" id="tab-evaluacion">
-                <div class="row g-3">
-                  <div class="col-md-4"><label class="form-label fw-bold">Tono Muscular</label><input type="text" class="form-control" id="hcTono"></div>
-                  <div class="col-md-4"><label class="form-label fw-bold">Reflejos</label><input type="text" class="form-control" id="hcReflejos"></div>
-                  <div class="col-md-4"><label class="form-label fw-bold">Sensibilidad</label><input type="text" class="form-control" id="hcSensibilidad"></div>
-                </div>
-              </div>
-
-              <!-- PESTAÑA 4 -->
-              <div class="tab-pane fade" id="tab-plan">
-                <div class="mb-3"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
-                <div class="mb-3"><label class="form-label fw-bold">Plan de Tratamiento Aplicado</label><textarea id="hcTratamiento" class="form-control" rows="2"></textarea></div>
-                <div class="mb-3"><label class="form-label fw-bold">Ejercicios Mandados a Casa</label><textarea id="hcEjerciciosCasa" class="form-control" rows="2"></textarea></div>
-              </div>
+              </form>
             </div>
-            <div class="modal-footer mt-3">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Guardar Historia Clínica</button>
+
+            <!-- PESTAÑA 2: MOSTRAR / EDITAR HISTORIAS GUARDADAS -->
+            <div class="tab-pane fade" id="tab-registros">
+              <div id="contenedorHistorias"></div>
             </div>
-          </form>
+          </div>
+
         </div>
       </div>
     </div>
@@ -225,10 +206,10 @@
         </div>
         <div class="modal-body">
           <form id="formSeguimiento" class="bg-light p-3 rounded mb-4">
-            <!-- Campo oculto para saber a qué paciente pertenece -->
             <input type="hidden" id="segCedulaPaciente">
+            <input type="hidden" id="segIndexEditar" value="-1">
             
-            <h6 class="fw-bold mb-3">Registrar Nueva Sesión</h6>
+            <h6 class="fw-bold mb-3" id="tituloFormSeguimiento">Registrar Nueva Sesión</h6>
             <div class="row g-2">
               <div class="col-md-4"><label class="form-label small">Fecha de Sesión</label><input type="date" id="segFecha" class="form-control form-control-sm" required></div>
               <div class="col-md-4">
@@ -241,18 +222,21 @@
               </div>
               <div class="col-md-4"><label class="form-label small">Monto Pagado ($)</label><input type="number" step="0.01" id="segPago" class="form-control form-control-sm" placeholder="0.00"></div>
               <div class="col-12"><label class="form-label small">Avances y Tratamiento Aplicado Hoy</label><textarea id="segEvolucion" class="form-control form-control-sm" rows="2" required></textarea></div>
-              <div class="col-12 text-end mt-2"><button type="submit" class="btn btn-sm btn-success"><i class="bi bi-plus-circle"></i> Agregar Sesión</button></div>
+              <div class="col-12 text-end mt-2">
+                <button type="button" id="btnCancelarEditSeg" class="btn btn-sm btn-secondary d-none" onclick="cancelarEdicionSeguimiento()">Cancelar</button>
+                <button type="submit" id="btnGuardarSeg" class="btn btn-sm btn-success"><i class="bi bi-plus-circle"></i> Agregar Sesión</button>
+              </div>
             </div>
           </form>
 
           <h6 class="fw-bold">Historial de Sesiones Anteriores</h6>
           <div class="table-responsive">
-            <table class="table table-hover table-striped">
+            <table class="table table-hover table-striped align-middle">
               <thead class="table-light">
-                <tr><th>Fecha</th><th>Asistencia</th><th>Evolución / Avance</th><th>Pago</th></tr>
+                <tr><th>Fecha</th><th>Asistencia</th><th>Evolución / Avance</th><th>Pago</th><th class="text-center">Acciones</th></tr>
               </thead>
               <tbody id="listaSeguimientos">
-                <tr><td colspan="4" class="text-center text-muted">Sin registros de evolución aún</td></tr>
+                <tr><td colspan="5" class="text-center text-muted">Sin registros de evolución aún</td></tr>
               </tbody>
             </table>
           </div>
@@ -287,18 +271,65 @@
       document.getElementById('vistaLogin').classList.remove('d-none');
     }
 
-    // ABRIR Y CARGAR HISTORIA CLÍNICA
+    // --- SECCIÓN HISTORIA CLÍNICA ---
     function abrirHistoria(cedula, nombre, celular) {
       document.getElementById('formHistoriaClinica').reset();
-      
       document.getElementById('hcFechaApertura').valueAsDate = new Date();
       document.getElementById('hcCedula').value = cedula;
       document.getElementById('hcNombre').value = nombre;
       document.getElementById('hcCelular').value = celular || '';
 
+      // Mostrar pestaña de formulario primero
+      const firstTab = new bootstrap.Tab(document.getElementById('btn-tab-form'));
+      firstTab.show();
+
+      cargarVistaHistorias(cedula);
+
+      const modal = new bootstrap.Modal(document.getElementById('modalHistoriaClinica'));
+      modal.show();
+    }
+
+    function cargarVistaHistorias(cedula) {
+      const datosGuardados = localStorage.getItem('historia_' + cedula);
+      const contenedor = document.getElementById('contenedorHistorias');
+
+      if (!datosGuardados) {
+        contenedor.innerHTML = '<div class="alert alert-info text-center">No hay ninguna Historia Clínica registrada para este paciente aún.</div>';
+        return;
+      }
+
+      const hc = JSON.parse(datosGuardados);
+      contenedor.innerHTML = `
+        <div class="card border-primary mb-3">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="bi bi-file-text me-2"></i>Historia Clínica Registrada (${hc.fechaApertura || 'Sin fecha'})</h6>
+            <button class="btn btn-sm btn-light" onclick="editarHistoria('${cedula}')"><i class="bi bi-pencil-square me-1"></i> Editar Esta Historia</button>
+          </div>
+          <div class="card-body">
+            <div class="row g-2">
+              <div class="col-md-6"><b>Médico Tratante:</b> ${hc.medico || 'N/A'}</div>
+              <div class="col-md-6"><b>Ocupación:</b> ${hc.ocupacion || 'N/A'}</div>
+              <div class="col-12"><hr class="my-1"></div>
+              <div class="col-12"><b>Diagnóstico Médico:</b> ${hc.diagMedico || 'N/A'}</div>
+              <div class="col-12"><b>Motivo de Consulta:</b> ${hc.motivo || 'N/A'}</div>
+              <div class="col-md-6"><b>Antecedentes Personal/Quirúrgicos:</b> ${hc.antecedentesPat || 'N/A'}</div>
+              <div class="col-md-6"><b>Medicamentos/Alergias:</b> ${hc.medicamentosAlergias || 'N/A'}</div>
+              <div class="col-12"><hr class="my-1"></div>
+              <div class="col-md-6"><b>Nivel de Dolor (EVA):</b> <span class="badge bg-danger">${hc.dolor || '0'}/10</span></div>
+              <div class="col-md-6"><b>Ayudas Técnicas:</b> ${hc.ayudasTecnicas || 'N/A'}</div>
+              <div class="col-12"><b>Diagnóstico Fisioterapéutico:</b> ${hc.diagFisio || 'N/A'}</div>
+              <div class="col-12"><b>Plan de Tratamiento:</b> ${hc.tratamiento || 'N/A'}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function editarHistoria(cedula) {
       const datosGuardados = localStorage.getItem('historia_' + cedula);
       if (datosGuardados) {
         const hc = JSON.parse(datosGuardados);
+        document.getElementById('hcFechaApertura').value = hc.fechaApertura || '';
         document.getElementById('hcFechaNacimiento').value = hc.fechaNacimiento || '';
         document.getElementById('hcEdad').value = hc.edad || '';
         document.getElementById('hcGenero').value = hc.genero || 'Masculino';
@@ -308,26 +339,20 @@
         document.getElementById('hcMotivo').value = hc.motivo || '';
         document.getElementById('hcAntecedentesPat').value = hc.antecedentesPat || '';
         document.getElementById('hcMedicamentosAlergias').value = hc.medicamentosAlergias || '';
-        document.getElementById('hcAntecedentesFam').value = hc.antecedentesFam || '';
         document.getElementById('hcRangoDolor').value = hc.dolor || 5;
         document.getElementById('evaValor').innerText = hc.dolor || 5;
         document.getElementById('hcAyudasTecnicas').value = hc.ayudasTecnicas || '';
-        document.getElementById('hcTono').value = hc.tono || '';
-        document.getElementById('hcReflejos').value = hc.reflejos || '';
-        document.getElementById('hcSensibilidad').value = hc.sensibilidad || '';
         document.getElementById('hcDiagFisio').value = hc.diagFisio || '';
         document.getElementById('hcTratamiento').value = hc.tratamiento || '';
-        document.getElementById('hcEjerciciosCasa').value = hc.ejerciciosCasa || '';
-      }
 
-      const modal = new bootstrap.Modal(document.getElementById('modalHistoriaClinica'));
-      modal.show();
+        // Cambiar a la pestaña del formulario para editar
+        const formTab = new bootstrap.Tab(document.getElementById('btn-tab-form'));
+        formTab.show();
+      }
     }
 
-    // GUARDAR HISTORIA CLÍNICA
     document.getElementById('formHistoriaClinica').addEventListener('submit', function(e) {
       e.preventDefault();
-
       const cedula = document.getElementById('hcCedula').value;
       const datosHistoria = {
         fechaApertura: document.getElementById('hcFechaApertura').value,
@@ -340,28 +365,24 @@
         motivo: document.getElementById('hcMotivo').value,
         antecedentesPat: document.getElementById('hcAntecedentesPat').value,
         medicamentosAlergias: document.getElementById('hcMedicamentosAlergias').value,
-        antecedentesFam: document.getElementById('hcAntecedentesFam').value,
         dolor: document.getElementById('hcRangoDolor').value,
         ayudasTecnicas: document.getElementById('hcAyudasTecnicas').value,
-        tono: document.getElementById('hcTono').value,
-        reflejos: document.getElementById('hcReflejos').value,
-        sensibilidad: document.getElementById('hcSensibilidad').value,
         diagFisio: document.getElementById('hcDiagFisio').value,
-        tratamiento: document.getElementById('hcTratamiento').value,
-        ejerciciosCasa: document.getElementById('hcEjerciciosCasa').value
+        tratamiento: document.getElementById('hcTratamiento').value
       };
 
       localStorage.setItem('historia_' + cedula, JSON.stringify(datosHistoria));
-      alert('¡Historia clínica guardada correctamente!');
+      alert('¡Historia clínica guardada con éxito!');
+      cargarVistaHistorias(cedula);
       
       const modalElement = document.getElementById('modalHistoriaClinica');
       const modal = bootstrap.Modal.getInstance(modalElement);
       modal.hide();
     });
 
-    // ABRIR Y CARGAR SEGUIMIENTO Y EVOLUCIÓN
+    // --- SECCIÓN SEGUIMIENTO ---
     function abrirSeguimiento(cedula) {
-      document.getElementById('formSeguimiento').reset();
+      cancelarEdicionSeguimiento();
       document.getElementById('segCedulaPaciente').value = cedula;
       document.getElementById('segFecha').valueAsDate = new Date();
 
@@ -371,7 +392,6 @@
       modal.show();
     }
 
-    // FUNCION PARA RECEPTAR Y MOSTRAR LA TABLA DE SESIONES
     function renderizarTablaSeguimientos(cedula) {
       const tbody = document.getElementById('listaSeguimientos');
       tbody.innerHTML = '';
@@ -380,28 +400,61 @@
       const seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
 
       if (seguimientos.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin registros de evolución aún</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin registros de evolución aún</td></tr>';
         return;
       }
 
-      seguimientos.forEach(sesion => {
+      seguimientos.forEach((sesion, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${sesion.fecha}</td>
           <td><span class="badge ${sesion.asistencia === 'Asistió' ? 'bg-success' : 'bg-warning'}">${sesion.asistencia}</span></td>
           <td>${sesion.evolucion}</td>
           <td>$${parseFloat(sesion.pago || 0).toFixed(2)}</td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-primary" onclick="cargarSeguimientoParaEditar(${index})">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // GUARDAR NUEVA SESIÓN DE SEGUIMIENTO
+    function cargarSeguimientoParaEditar(index) {
+      const cedula = document.getElementById('segCedulaPaciente').value;
+      const seguimientos = JSON.parse(localStorage.getItem('seguimientos_' + cedula));
+      const sesion = seguimientos[index];
+
+      document.getElementById('segIndexEditar').value = index;
+      document.getElementById('segFecha').value = sesion.fecha;
+      document.getElementById('segAsistencia').value = sesion.asistencia;
+      document.getElementById('segPago').value = sesion.pago;
+      document.getElementById('segEvolucion').value = sesion.evolucion;
+
+      document.getElementById('tituloFormSeguimiento').innerText = 'Editar Sesión de Seguimiento';
+      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-check-circle"></i> Actualizar Sesión';
+      document.getElementById('btnGuardarSeg').className = 'btn btn-sm btn-warning';
+      document.getElementById('btnCancelarEditSeg').classList.remove('d-none');
+    }
+
+    function cancelarEdicionSeguimiento() {
+      document.getElementById('formSeguimiento').reset();
+      document.getElementById('segIndexEditar').value = "-1";
+      document.getElementById('segFecha').valueAsDate = new Date();
+      document.getElementById('tituloFormSeguimiento').innerText = 'Registrar Nueva Sesión';
+      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-plus-circle"></i> Agregar Sesión';
+      document.getElementById('btnGuardarSeg').className = 'btn btn-sm btn-success';
+      document.getElementById('btnCancelarEditSeg').classList.add('d-none');
+    }
+
     document.getElementById('formSeguimiento').addEventListener('submit', function(e) {
-      e.preventDefault(); // PREVIENE LA RECARGA DE PÁGINA
+      e.preventDefault();
 
       const cedula = document.getElementById('segCedulaPaciente').value;
-      const nuevaSesion = {
+      const index = parseInt(document.getElementById('segIndexEditar').value);
+      
+      const sesionData = {
         fecha: document.getElementById('segFecha').value,
         asistencia: document.getElementById('segAsistencia').value,
         pago: document.getElementById('segPago').value,
@@ -409,16 +462,21 @@
       };
 
       const registrosGuardados = localStorage.getItem('seguimientos_' + cedula);
-      const seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
+      let seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
 
-      seguimientos.push(nuevaSesion);
+      if (index >= 0) {
+        // Modo Edición: Actualizar registro existente
+        seguimientos[index] = sesionData;
+        alert('¡Sesión de seguimiento actualizada!');
+      } else {
+        // Modo Nuevo: Agregar al historial
+        seguimientos.push(sesionData);
+        alert('¡Sesión de seguimiento registrada!');
+      }
+
       localStorage.setItem('seguimientos_' + cedula, JSON.stringify(seguimientos));
 
-      alert('¡Sesión de seguimiento registrada correctamente!');
-      
-      // Limpiar formulario y recargar la tabla interna
-      document.getElementById('segPago').value = '';
-      document.getElementById('segEvolucion').value = '';
+      cancelarEdicionSeguimiento();
       renderizarTablaSeguimientos(cedula);
     });
   </script>
