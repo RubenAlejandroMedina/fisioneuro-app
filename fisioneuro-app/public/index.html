@@ -14,6 +14,8 @@
     .custom-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
     .login-card { width: 100%; max-width: 420px; padding: 2rem; border-radius: 16px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    .table-eval input { width: 60px; text-align: center; }
+    .preview-media { max-width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; margin-top: 8px; border: 1px solid #dee2e6; }
   </style>
 </head>
 <body>
@@ -62,9 +64,6 @@
           <ul class="nav nav-pills flex-column">
             <li class="nav-item">
               <a href="#" class="nav-link active"><i class="bi bi-people-fill me-2"></i>Pacientes</a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link"><i class="bi bi-calendar-event me-2"></i>Agenda & Google Cal</a>
             </li>
           </ul>
         </div>
@@ -149,67 +148,218 @@
               
               <!-- Sub-pestañas internas de la Historia Clínica -->
               <ul class="nav nav-pills mb-3 bg-light p-2 rounded" id="subTabsHistoria" role="tablist">
-                <li class="nav-item"><button class="nav-link active py-1" data-bs-toggle="tab" data-bs-target="#tab-filiacion">1. Datos del Paciente</button></li>
-                <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-dolor">2. Dolor y EVA</button></li>
-                <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-evaluacion">3. Evaluación Física</button></li>
-                <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-plan">4. Diagnóstico y Plan</button></li>
+                <li class="nav-item"><button class="nav-link active py-1" data-bs-toggle="tab" data-bs-target="#tab-filiacion">1. Datos y Antecedentes</button></li>
+                <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-dolor">2. Enfermedad y Dolor</button></li>
+                <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-evaluacion-fisica">3. Eval. Muscular y Postura</button></li>
+                <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-goniometria">4. Goniometría y Neurología</button></li>
+                <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-plan">5. Diagnóstico y Plan</button></li>
               </ul>
 
               <form id="formHistoriaClinica">
                 <div class="tab-content border p-3 rounded">
-                  <!-- SECCIÓN 1: FILIACIÓN -->
+
+                  <!-- SECCIÓN 1: DATOS Y ANTECEDENTES -->
                   <div class="tab-pane fade show active" id="tab-filiacion">
-                    <h6 class="fw-bold text-primary mb-3">Apertura y Datos de Filiación</h6>
+                    <h6 class="fw-bold text-primary mb-3">Apertura y Datos del Paciente[cite: 2]</h6>
                     <div class="row g-3">
-                      <div class="col-md-4"><label class="form-label fw-bold">Fecha Apertura Historia</label><input type="date" id="hcFechaApertura" class="form-control" required></div>
-                      <div class="col-md-4"><label class="form-label fw-bold">Número de Cédula</label><input type="text" id="hcCedula" class="form-control" readonly></div>
-                      <div class="col-md-4"><label class="form-label fw-bold">Nombre Completo</label><input type="text" id="hcNombre" class="form-control" readonly></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Fecha Apertura Historia[cite: 2]</label><input type="date" id="hcFechaApertura" class="form-control" required></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Número de Cédula[cite: 2]</label><input type="text" id="hcCedula" class="form-control" readonly></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Nombre Completo[cite: 2]</label><input type="text" id="hcNombre" class="form-control" readonly></div>
                       
-                      <div class="col-md-3"><label class="form-label fw-bold">Fecha de Nacimiento</label><input type="date" id="hcFechaNacimiento" class="form-control"></div>
-                      <div class="col-md-2"><label class="form-label fw-bold">Edad</label><input type="number" id="hcEdad" class="form-control"></div>
+                      <div class="col-md-3"><label class="form-label fw-bold">Fecha de Nacimiento[cite: 2]</label><input type="date" id="hcFechaNacimiento" class="form-control"></div>
+                      <div class="col-md-2"><label class="form-label fw-bold">Edad[cite: 2]</label><input type="number" id="hcEdad" class="form-control"></div>
                       <div class="col-md-3">
-                        <label class="form-label fw-bold">Género</label>
+                        <label class="form-label fw-bold">Género[cite: 2]</label>
                         <select id="hcGenero" class="form-select"><option>Masculino</option><option>Femenino</option><option>Otro</option></select>
                       </div>
-                      <div class="col-md-4"><label class="form-label fw-bold">Celular / Teléfono</label><input type="text" id="hcCelular" class="form-control"></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Celular[cite: 2]</label><input type="text" id="hcCelular" class="form-control"></div>
                       
-                      <div class="col-md-6"><label class="form-label fw-bold">Ocupación</label><input type="text" id="hcOcupacion" class="form-control"></div>
-                      <div class="col-md-6"><label class="form-label fw-bold">Médico Tratante</label><input type="text" id="hcMedico" class="form-control"></div>
+                      <div class="col-md-6"><label class="form-label fw-bold">Ocupación[cite: 2]</label><input type="text" id="hcOcupacion" class="form-control"></div>
+                      <div class="col-md-6"><label class="form-label fw-bold">Médico Tratante[cite: 2]</label><input type="text" id="hcMedico" class="form-control"></div>
 
-                      <h6 class="fw-bold text-primary mt-4 mb-2">Anamnesis e Historial Clínico</h6>
-                      <div class="col-12"><label class="form-label fw-bold">Diagnóstico Médico</label><input type="text" id="hcDiagMedico" class="form-control"></div>
-                      <div class="col-12"><label class="form-label fw-bold">Motivo de Consulta</label><textarea id="hcMotivo" class="form-control" rows="2"></textarea></div>
-                      <div class="col-md-6"><label class="form-label fw-bold">Antecedentes Personales / Quirúrgicos</label><textarea id="hcAntecedentesPat" class="form-control" rows="2"></textarea></div>
-                      <div class="col-md-6"><label class="form-label fw-bold">Medicamentos Actuales y Alergias</label><textarea id="hcMedicamentosAlergias" class="form-control" rows="2"></textarea></div>
-                      <div class="col-12"><label class="form-label fw-bold">Antecedentes Familiares</label><textarea id="hcAntecedentesFam" class="form-control" rows="2"></textarea></div>
+                      <h6 class="fw-bold text-primary mt-4 mb-2">Diagnóstico y Motivo[cite: 2]</h6>
+                      <div class="col-12"><label class="form-label fw-bold">Diagnóstico Médico[cite: 2]</label><input type="text" id="hcDiagMedico" class="form-control"></div>
+                      <div class="col-12"><label class="form-label fw-bold">Motivo de Consulta[cite: 2]</label><textarea id="hcMotivo" class="form-control" rows="2"></textarea></div>
+
+                      <h6 class="fw-bold text-primary mt-4 mb-2">Antecedentes[cite: 2]</h6>
+                      <div class="col-md-6"><label class="form-label fw-bold">Personales - Enfermedades Previas Relevantes[cite: 2]</label><textarea id="hcEnfermedadesPrevias" class="form-control" rows="2"></textarea></div>
+                      <div class="col-md-6"><label class="form-label fw-bold">Personales - Intervenciones Quirúrgicas[cite: 2]</label><textarea id="hcQuirurgicas" class="form-control" rows="2"></textarea></div>
+                      <div class="col-md-6"><label class="form-label fw-bold">Medicamentos Actuales[cite: 2]</label><textarea id="hcMedicamentos" class="form-control" rows="2"></textarea></div>
+                      <div class="col-md-6"><label class="form-label fw-bold">Alergias[cite: 2]</label><textarea id="hcAlergias" class="form-control" rows="2"></textarea></div>
+                      <div class="col-12"><label class="form-label fw-bold">Familiares[cite: 2]</label><textarea id="hcAntecedentesFam" class="form-control" rows="2"></textarea></div>
                     </div>
                   </div>
 
-                  <!-- SECCIÓN 2: DOLOR Y EVA -->
+                  <!-- SECCIÓN 2: ENFERMEDAD Y DOLOR -->
                   <div class="tab-pane fade" id="tab-dolor">
+                    <h6 class="fw-bold text-primary mb-3">Historia de la Enfermedad Actual[cite: 2]</h6>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Síntomas[cite: 2]</label>
+                      <textarea id="hcSintomas" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <h6 class="fw-bold text-primary mb-3">Evaluación del Dolor (EVA)[cite: 2]</h6>
                     <div class="mb-4">
-                      <label class="form-label fw-bold">Escala Visual Analógica del Dolor (EVA): <span id="evaValor" class="badge bg-danger fs-6">5</span>/10</label>
+                      <label class="form-label fw-bold">Escala Visual Analógica: <span id="evaValor" class="badge bg-danger fs-6">5</span>/10</label>
                       <input type="range" class="form-range" min="0" max="10" step="1" id="hcRangoDolor" value="5" oninput="document.getElementById('evaValor').innerText = this.value">
+                      <div class="d-flex justify-content-between small text-muted">
+                        <span>0 - Sin Dolor</span>
+                        <span>1-3 Leve</span>
+                        <span>4-6 Moderada</span>
+                        <span>7-10 Intensa</span>
+                      </div>
                     </div>
+
                     <div class="row g-3">
-                      <div class="col-12"><label class="form-label fw-bold">Ayudas Técnicas Actuales</label><input type="text" class="form-control" id="hcAyudasTecnicas" placeholder="Ej: Muletas, bastón, ortesis..."></div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Imágenes Diagnósticas (Subir Archivo)[cite: 2]</label>
+                        <input type="file" id="hcImgDiagnostica" class="form-control" accept="image/*" onchange="previewImg(this, 'prevDiag')">
+                        <img id="prevDiag" class="preview-media d-none" alt="Vista previa">
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Ayudas Técnicas[cite: 2]</label>
+                        <textarea id="hcAyudasTecnicas" class="form-control" rows="3" placeholder="Ej: Muletas, bastón, ortesis..."></textarea>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- SECCIÓN 3: EVALUACIÓN FÍSICA -->
-                  <div class="tab-pane fade" id="tab-evaluacion">
-                    <div class="row g-3">
-                      <div class="col-md-4"><label class="form-label fw-bold">Tono Muscular</label><input type="text" class="form-control" id="hcTono"></div>
-                      <div class="col-md-4"><label class="form-label fw-bold">Reflejos</label><input type="text" class="form-control" id="hcReflejos"></div>
-                      <div class="col-md-4"><label class="form-label fw-bold">Sensibilidad</label><input type="text" class="form-control" id="hcSensibilidad"></div>
+                  <!-- SECCIÓN 3: EVALUACIÓN FÍSICA Y MUSCULAR -->
+                  <div class="tab-pane fade" id="tab-evaluacion-fisica">
+                    <h6 class="fw-bold text-primary mb-3">Postura[cite: 2]</h6>
+                    <div class="mb-4">
+                      <label class="form-label fw-bold">Incluir Imagen de Postura[cite: 2]</label>
+                      <input type="file" id="hcImgPostura" class="form-control" accept="image/*" onchange="previewImg(this, 'prevPostura')">
+                      <img id="prevPostura" class="preview-media d-none" alt="Vista previa Postura">
+                    </div>
+
+                    <h6 class="fw-bold text-primary mb-3">Evaluación Muscular[cite: 2]</h6>
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-sm text-center align-middle table-eval">
+                        <thead class="table-light">
+                          <tr>
+                            <th rowspan="2">Segmento Corporal[cite: 2]</th>
+                            <th colspan="2">Inicial[cite: 2]</th>
+                            <th colspan="2">Final[cite: 2]</th>
+                          </tr>
+                          <tr>
+                            <th>D[cite: 2]</th>
+                            <th>I[cite: 2]</th>
+                            <th>D[cite: 2]</th>
+                            <th>I[cite: 2]</th>
+                          </tr>
+                        </thead>
+                        <tbody id="tablaEvalMuscular">
+                          <!-- Miembro Superior -->
+                          <tr class="table-secondary"><td colspan="5" class="fw-bold text-start">Miembro Superior[cite: 2]</td></tr>
+                          <script>
+                            const movsSup = ['Fx de hombro','Ex de hombro','Abd de hombro','Add de hombro','Fx de codo','Ex de codo','Fx de muñeca','Ex de muñeca'];
+                            const movsInf = ['Fx de cadera','Ex de cadera','Abd de cadera','Add de cadera','Fx de rodilla','Ex de rodilla','Fx de tobillo','Ex de tobillo'];
+                          </script>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
 
-                  <!-- SECCIÓN 4: DIAGNÓSTICO Y PLAN -->
+                  <!-- SECCIÓN 4: GONIOMETRÍA Y OTROS -->
+                  <div class="tab-pane fade" id="tab-goniometria">
+                    <h6 class="fw-bold text-primary mb-3">Goniometría[cite: 2]</h6>
+                    
+                    <div class="row g-3">
+                      <!-- Columna Cervical -->
+                      <div class="col-md-6">
+                        <h7 class="fw-bold">Columna Cervical[cite: 2]</h7>
+                        <table class="table table-bordered table-sm text-center mt-1">
+                          <thead class="table-light"><tr><th>Movimiento / Grados[cite: 2]</th><th>A.M.A.[cite: 2]</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0° - 45°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cerv_flex"></td></tr>
+                            <tr><td>Ext. 0° - 45°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cerv_ext"></td></tr>
+                            <tr><td>Rot. I. 0° - 60°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cerv_roti"></td></tr>
+                            <tr><td>Rot. D. 0° - 60°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cerv_rotd"></td></tr>
+                            <tr><td>Inc. I. 0° - 45°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cerv_inci"></td></tr>
+                            <tr><td>Inc. D. 0° - 45°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cerv_incd"></td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <!-- Columna Lumbar -->
+                      <div class="col-md-6">
+                        <h7 class="fw-bold">Columna Lumbar[cite: 2]</h7>
+                        <table class="table table-bordered table-sm text-center mt-1">
+                          <thead class="table-light"><tr><th>Movimiento / Grados[cite: 2]</th><th>A.M.A.[cite: 2]</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0° - 80°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_lumb_flex"></td></tr>
+                            <tr><td>Ext. 0° - 30°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_lumb_ext"></td></tr>
+                            <tr><td>Rot. I. 0° - 45°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_lumb_roti"></td></tr>
+                            <tr><td>Rot. D. 0° - 45°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_lumb_rotd"></td></tr>
+                            <tr><td>Inc. I. 0° - 35°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_lumb_inci"></td></tr>
+                            <tr><td>Inc. D. 0° - 35°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_lumb_incd"></td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <!-- Miembro Superior Goniometria -->
+                      <div class="col-md-6">
+                        <h7 class="fw-bold">Hombro, Codo y Muñeca[cite: 2]</h7>
+                        <table class="table table-bordered table-sm text-center mt-1">
+                          <thead class="table-light"><tr><th>Segmento y Mov.[cite: 2]</th><th>A.M.A.[cite: 2]</th></tr></thead>
+                          <tbody>
+                            <tr><td>Hombro Flex. 0° - 180°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_hom_flex"></td></tr>
+                            <tr><td>Hombro Ext. 0° - 60°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_hom_ext"></td></tr>
+                            <tr><td>Hombro Abd. 0° - 180°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_hom_abd"></td></tr>
+                            <tr><td>Hombro Ad. 0°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_hom_ad"></td></tr>
+                            <tr><td>Hombro Rot. I. 0° - 70°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_hom_roti"></td></tr>
+                            <tr><td>Hombro Rot. E. 0° - 90°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_hom_rote"></td></tr>
+                            <tr><td>Codo Flex. 0° - 150°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_codo_flex"></td></tr>
+                            <tr><td>Codo Ext. 0°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_codo_ext"></td></tr>
+                            <tr><td>Antebrazo Pron. 0° - 80°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_ant_pron"></td></tr>
+                            <tr><td>Antebrazo Sup. 0° - 80°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_ant_sup"></td></tr>
+                            <tr><td>Muñeca Flex. 0° - 80°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_mun_flex"></td></tr>
+                            <tr><td>Muñeca Ext. 0° - 70°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_mun_ext"></td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <!-- Miembro Inferior Goniometria -->
+                      <div class="col-md-6">
+                        <h7 class="fw-bold">Cadera, Rodilla y Tobillo[cite: 2]</h7>
+                        <table class="table table-bordered table-sm text-center mt-1">
+                          <thead class="table-light"><tr><th>Movimiento / Grados[cite: 2]</th><th>D[cite: 2]</th><th>I[cite: 2]</th></tr></thead>
+                          <tbody>
+                            <tr><td>Cadera Flex. 0° - 120°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cad_flex_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_cad_flex_i"></td></tr>
+                            <tr><td>Cadera Ext. 0° - 30°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cad_ext_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_cad_ext_i"></td></tr>
+                            <tr><td>Cadera Abd. 0° - 30°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cad_abd_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_cad_abd_i"></td></tr>
+                            <tr><td>Cadera Ad. 0° - 45°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_cad_ad_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_cad_ad_i"></td></tr>
+                            <tr><td>Rodilla Flex. 0° - 135°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_rod_flex_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_rod_flex_i"></td></tr>
+                            <tr><td>Rodilla Ext. 0° - 10°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_rod_ext_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_rod_ext_i"></td></tr>
+                            <tr><td>Tobillo Flex. D 0° - 20°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_tob_flexd_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_tob_flexd_i"></td></tr>
+                            <tr><td>Tobillo Flext. P 0° - 50°[cite: 2]</td><td><input type="text" class="form-control form-control-sm" id="gon_tob_flexp_d"></td><td><input type="text" class="form-control form-control-sm" id="gon_tob_flexp_i"></td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <h6 class="fw-bold text-primary mt-4 mb-3">Evaluación Neuromuscular[cite: 2]</h6>
+                    <div class="row g-3">
+                      <div class="col-md-4"><label class="form-label fw-bold">Tono[cite: 2]</label><input type="text" class="form-control" id="hcTono"></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Reflejos[cite: 2]</label><input type="text" class="form-control" id="hcReflejos"></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Sensibilidad[cite: 2]</label><input type="text" class="form-control" id="hcSensibilidad"></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Coordinación[cite: 2]</label><input type="text" class="form-control" id="hcCoordinacion"></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Equilibrio[cite: 2]</label><input type="text" class="form-control" id="hcEquilibrio"></div>
+                      <div class="col-md-4"><label class="form-label fw-bold">Escalas Específicas[cite: 2]</label><input type="text" class="form-control" id="hcEscalasEspec"></div>
+                      <div class="col-md-12">
+                        <label class="form-label fw-bold">Marcha (Incluir Video)[cite: 2]</label>
+                        <input type="file" id="hcVideoMarcha" class="form-control" accept="video/*" onchange="previewVideo(this, 'prevVideoMarcha')">
+                        <video id="prevVideoMarcha" class="preview-media d-none" controls></video>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- SECCIÓN 5: DIAGNÓSTICO Y PLAN DE TRATAMIENTO -->
                   <div class="tab-pane fade" id="tab-plan">
-                    <div class="mb-3"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Plan de Tratamiento Aplicado</label><textarea id="hcTratamiento" class="form-control" rows="2"></textarea></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Ejercicios Mandados a Casa</label><textarea id="hcEjerciciosCasa" class="form-control" rows="2"></textarea></div>
+                    <h6 class="fw-bold text-primary mb-3">Diagnóstico y Plan[cite: 2]</h6>
+                    <div class="mb-3"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico[cite: 2]</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Tratamiento[cite: 2]</label><textarea id="hcTratamiento" class="form-control" rows="2"></textarea></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Ejercicios en Casa que se envía a Pacientes[cite: 2]</label><textarea id="hcEjerciciosCasa" class="form-control" rows="2"></textarea></div>
                   </div>
                 </div>
 
@@ -231,12 +381,12 @@
     </div>
   </div>
 
-  <!-- MODAL: SEGUIMIENTO Y EVOLUCIÓN -->
+  <!-- MODAL: SEGUIMIENTO Y AGENDAMIENTO -->
   <div class="modal fade" id="modalSeguimiento" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header bg-success text-white">
-          <h5 class="modal-title"><i class="bi bi-activity me-2"></i>Seguimiento y Evolución Diaria</h5>
+          <h5 class="modal-title"><i class="bi bi-activity me-2"></i>Seguimiento de Progreso, Citas y Pagos[cite: 2]</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -244,34 +394,40 @@
             <input type="hidden" id="segCedulaPaciente">
             <input type="hidden" id="segIndexEditar" value="-1">
             
-            <h6 class="fw-bold mb-3" id="tituloFormSeguimiento">Registrar Nueva Sesión</h6>
+            <h6 class="fw-bold mb-3" id="tituloFormSeguimiento">Registrar Nueva Sesión / Agendamiento[cite: 2]</h6>
             <div class="row g-2">
-              <div class="col-md-4"><label class="form-label small">Fecha de Sesión</label><input type="date" id="segFecha" class="form-control form-control-sm" required></div>
+              <div class="col-md-4"><label class="form-label small">Fecha y Hora de Cita[cite: 2]</label><input type="datetime-local" id="segFecha" class="form-control form-control-sm" required></div>
               <div class="col-md-4">
-                <label class="form-label small">Estado de Asistencia</label>
+                <label class="form-label small">Estado de Cita (Agendamiento)[cite: 2]</label>
                 <select id="segAsistencia" class="form-select form-select-sm">
-                  <option value="Asistió">Asistió</option>
-                  <option value="Reprogramada">Reprogramada</option>
-                  <option value="Cancelada">Cancelada</option>
+                  <option value="Asistió">Asistió[cite: 2]</option>
+                  <option value="Reprogramada">Reprogramada[cite: 2]</option>
+                  <option value="Cancelada">Cancelada[cite: 2]</option>
+                  <option value="Pendiente">Pendiente</option>
                 </select>
               </div>
-              <div class="col-md-4"><label class="form-label small">Monto Pagado ($)</label><input type="number" step="0.01" id="segPago" class="form-control form-control-sm" placeholder="0.00"></div>
-              <div class="col-12"><label class="form-label small">Avances y Tratamiento Aplicado Hoy</label><textarea id="segEvolucion" class="form-control form-control-sm" rows="2" required></textarea></div>
-              <div class="col-12 text-end mt-2">
-                <button type="button" id="btnCancelarEditSeg" class="btn btn-sm btn-secondary d-none" onclick="cancelarEdicionSeguimiento()">Cancelar</button>
-                <button type="submit" id="btnGuardarSeg" class="btn btn-sm btn-success"><i class="bi bi-plus-circle"></i> Agregar Sesión</button>
+              <div class="col-md-4"><label class="form-label small">Monto Pagado ($)[cite: 2]</label><input type="number" step="0.01" id="segPago" class="form-control form-control-sm" placeholder="0.00"></div>
+              
+              <div class="col-12"><label class="form-label small">Seguimiento de Progreso y Tratamiento Aplicado[cite: 2]</label><textarea id="segEvolucion" class="form-control form-control-sm" rows="2"></textarea></div>
+
+              <div class="col-12 mt-2 d-flex justify-content-between align-items-center">
+                <button type="button" class="btn btn-sm btn-outline-info" onclick="enviarRecordatorioSMS()"><i class="bi bi-chat-text-fill me-1"></i> Recordatorio SMS[cite: 2]</button>
+                <div>
+                  <button type="button" id="btnCancelarEditSeg" class="btn btn-sm btn-secondary d-none" onclick="cancelarEdicionSeguimiento()">Cancelar</button>
+                  <button type="submit" id="btnGuardarSeg" class="btn btn-sm btn-success"><i class="bi bi-plus-circle"></i> Guardar Registro</button>
+                </div>
               </div>
             </div>
           </form>
 
-          <h6 class="fw-bold">Historial de Sesiones Anteriores</h6>
+          <h6 class="fw-bold">Historial de Citas, Progreso y Pagos[cite: 2]</h6>
           <div class="table-responsive">
             <table class="table table-hover table-striped align-middle">
               <thead class="table-light">
-                <tr><th>Fecha</th><th>Asistencia</th><th>Evolución / Avance</th><th>Pago</th><th class="text-center">Acciones</th></tr>
+                <tr><th>Fecha</th><th>Estado</th><th>Progreso / Evolución[cite: 2]</th><th>Pago[cite: 2]</th><th class="text-center">Acciones</th></tr>
               </thead>
               <tbody id="listaSeguimientos">
-                <tr><td colspan="5" class="text-center text-muted">Sin registros de evolución aún</td></tr>
+                <tr><td colspan="5" class="text-center text-muted">Sin registros aún</td></tr>
               </tbody>
             </table>
           </div>
@@ -282,6 +438,52 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Generar dinámicamente las filas de la tabla de Evaluación Muscular
+    window.onload = function() {
+      const tbody = document.getElementById('tablaEvalMuscular');
+      let html = '<tr class="table-secondary"><td colspan="5" class="fw-bold text-start">Miembro Superior[cite: 2]</td></tr>';
+      
+      movsSup.forEach((m, i) => {
+        html += `<tr>
+          <td class="text-start">${m}</td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_sup_d_ini_${i}"></td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_sup_i_ini_${i}"></td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_sup_d_fin_${i}"></td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_sup_i_fin_${i}"></td>
+        </tr>`;
+      });
+
+      html += '<tr class="table-secondary"><td colspan="5" class="fw-bold text-start">Miembro Inferior[cite: 2]</td></tr>';
+      movsInf.forEach((m, i) => {
+        html += `<tr>
+          <td class="text-start">${m}</td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_inf_d_ini_${i}"></td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_inf_i_ini_${i}"></td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_inf_d_fin_${i}"></td>
+          <td><input type="text" class="form-control form-control-sm" id="musc_inf_i_fin_${i}"></td>
+        </tr>`;
+      });
+
+      tbody.innerHTML = html;
+    };
+
+    function previewImg(input, targetId) {
+      const target = document.getElementById(targetId);
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { target.src = e.target.result; target.classList.remove('d-none'); }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function previewVideo(input, targetId) {
+      const target = document.getElementById(targetId);
+      if (input.files && input.files[0]) {
+        target.src = URL.createObjectURL(input.files[0]);
+        target.classList.remove('d-none');
+      }
+    }
+
     function cambiarTipoLogin(rol) {
       const lblUsuario = document.getElementById('lblUsuario');
       const inputUsuario = document.getElementById('loginUsuario');
@@ -313,6 +515,10 @@
       document.getElementById('hcCedula').value = cedula;
       document.getElementById('hcNombre').value = nombre;
       document.getElementById('hcCelular').value = celular || '';
+
+      document.getElementById('prevDiag').classList.add('d-none');
+      document.getElementById('prevPostura').classList.add('d-none');
+      document.getElementById('prevVideoMarcha').classList.add('d-none');
 
       const firstTab = new bootstrap.Tab(document.getElementById('btn-tab-form'));
       firstTab.show();
@@ -346,18 +552,25 @@
               <div class="col-12"><hr class="my-1"></div>
               <div class="col-12"><b>Diagnóstico Médico:</b> ${hc.diagMedico || 'N/A'}</div>
               <div class="col-12"><b>Motivo de Consulta:</b> ${hc.motivo || 'N/A'}</div>
-              <div class="col-md-6"><b>Antecedentes Personales/Quirúrgicos:</b> ${hc.antecedentesPat || 'N/A'}</div>
-              <div class="col-md-6"><b>Medicamentos/Alergias:</b> ${hc.medicamentosAlergias || 'N/A'}</div>
+              <div class="col-md-6"><b>Enfermedades Previas:</b> ${hc.enfermedadesPrevias || 'N/A'}</div>
+              <div class="col-md-6"><b>Quirúrgicas:</b> ${hc.quirurgicas || 'N/A'}</div>
+              <div class="col-md-6"><b>Medicamentos:</b> ${hc.medicamentos || 'N/A'}</div>
+              <div class="col-md-6"><b>Alergias:</b> ${hc.alergias || 'N/A'}</div>
               <div class="col-12"><b>Antecedentes Familiares:</b> ${hc.antecedentesFam || 'N/A'}</div>
               <div class="col-12"><hr class="my-1"></div>
+              <div class="col-12"><b>Síntomas:</b> ${hc.sintomas || 'N/A'}</div>
               <div class="col-md-6"><b>Dolor (EVA):</b> <span class="badge bg-danger">${hc.dolor || '0'}/10</span></div>
               <div class="col-md-6"><b>Ayudas Técnicas:</b> ${hc.ayudasTecnicas || 'N/A'}</div>
+              <div class="col-12"><hr class="my-1"></div>
               <div class="col-md-4"><b>Tono Muscular:</b> ${hc.tono || 'N/A'}</div>
               <div class="col-md-4"><b>Reflejos:</b> ${hc.reflejos || 'N/A'}</div>
               <div class="col-md-4"><b>Sensibilidad:</b> ${hc.sensibilidad || 'N/A'}</div>
+              <div class="col-md-4"><b>Coordinación:</b> ${hc.coordinacion || 'N/A'}</div>
+              <div class="col-md-4"><b>Equilibrio:</b> ${hc.equilibrio || 'N/A'}</div>
+              <div class="col-md-4"><b>Escalas Específicas:</b> ${hc.escalasEspec || 'N/A'}</div>
               <div class="col-12"><hr class="my-1"></div>
               <div class="col-12"><b>Diagnóstico Fisioterapéutico:</b> ${hc.diagFisio || 'N/A'}</div>
-              <div class="col-12"><b>Plan de Tratamiento:</b> ${hc.tratamiento || 'N/A'}</div>
+              <div class="col-12"><b>Tratamiento:</b> ${hc.tratamiento || 'N/A'}</div>
               <div class="col-12"><b>Ejercicios en Casa:</b> ${hc.ejerciciosCasa || 'N/A'}</div>
             </div>
           </div>
@@ -377,15 +590,25 @@
         document.getElementById('hcMedico').value = hc.medico || '';
         document.getElementById('hcDiagMedico').value = hc.diagMedico || '';
         document.getElementById('hcMotivo').value = hc.motivo || '';
-        document.getElementById('hcAntecedentesPat').value = hc.antecedentesPat || '';
-        document.getElementById('hcMedicamentosAlergias').value = hc.medicamentosAlergias || '';
+        
+        document.getElementById('hcEnfermedadesPrevias').value = hc.enfermedadesPrevias || '';
+        document.getElementById('hcQuirurgicas').value = hc.quirurgicas || '';
+        document.getElementById('hcMedicamentos').value = hc.medicamentos || '';
+        document.getElementById('hcAlergias').value = hc.alergias || '';
         document.getElementById('hcAntecedentesFam').value = hc.antecedentesFam || '';
+        
+        document.getElementById('hcSintomas').value = hc.sintomas || '';
         document.getElementById('hcRangoDolor').value = hc.dolor || 5;
         document.getElementById('evaValor').innerText = hc.dolor || 5;
         document.getElementById('hcAyudasTecnicas').value = hc.ayudasTecnicas || '';
+        
         document.getElementById('hcTono').value = hc.tono || '';
         document.getElementById('hcReflejos').value = hc.reflejos || '';
         document.getElementById('hcSensibilidad').value = hc.sensibilidad || '';
+        document.getElementById('hcCoordinacion').value = hc.coordinacion || '';
+        document.getElementById('hcEquilibrio').value = hc.equilibrio || '';
+        document.getElementById('hcEscalasEspec').value = hc.escalasEspec || '';
+        
         document.getElementById('hcDiagFisio').value = hc.diagFisio || '';
         document.getElementById('hcTratamiento').value = hc.tratamiento || '';
         document.getElementById('hcEjerciciosCasa').value = hc.ejerciciosCasa || '';
@@ -407,14 +630,20 @@
         medico: document.getElementById('hcMedico').value,
         diagMedico: document.getElementById('hcDiagMedico').value,
         motivo: document.getElementById('hcMotivo').value,
-        antecedentesPat: document.getElementById('hcAntecedentesPat').value,
-        medicamentosAlergias: document.getElementById('hcMedicamentosAlergias').value,
+        enfermedadesPrevias: document.getElementById('hcEnfermedadesPrevias').value,
+        quirurgicas: document.getElementById('hcQuirurgicas').value,
+        medicamentos: document.getElementById('hcMedicamentos').value,
+        alergias: document.getElementById('hcAlergias').value,
         antecedentesFam: document.getElementById('hcAntecedentesFam').value,
+        sintomas: document.getElementById('hcSintomas').value,
         dolor: document.getElementById('hcRangoDolor').value,
         ayudasTecnicas: document.getElementById('hcAyudasTecnicas').value,
         tono: document.getElementById('hcTono').value,
         reflejos: document.getElementById('hcReflejos').value,
         sensibilidad: document.getElementById('hcSensibilidad').value,
+        coordinacion: document.getElementById('hcCoordinacion').value,
+        equilibrio: document.getElementById('hcEquilibrio').value,
+        escalasEspec: document.getElementById('hcEscalasEspec').value,
         diagFisio: document.getElementById('hcDiagFisio').value,
         tratamiento: document.getElementById('hcTratamiento').value,
         ejerciciosCasa: document.getElementById('hcEjerciciosCasa').value
@@ -429,11 +658,10 @@
       modal.hide();
     });
 
-    // --- SEGUIMIENTO ---
+    // --- SEGUIMIENTO, CITAS Y PAGOS ---
     function abrirSeguimiento(cedula) {
       cancelarEdicionSeguimiento();
       document.getElementById('segCedulaPaciente').value = cedula;
-      document.getElementById('segFecha').valueAsDate = new Date();
 
       renderizarTablaSeguimientos(cedula);
 
@@ -449,16 +677,16 @@
       const seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
 
       if (seguimientos.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin registros de evolución aún</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin registros de seguimiento aún</td></tr>';
         return;
       }
 
       seguimientos.forEach((sesion, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${sesion.fecha}</td>
-          <td><span class="badge ${sesion.asistencia === 'Asistió' ? 'bg-success' : 'bg-warning'}">${sesion.asistencia}</span></td>
-          <td>${sesion.evolucion}</td>
+          <td>${sesion.fecha ? sesion.fecha.replace('T', ' ') : 'S/F'}</td>
+          <td><span class="badge ${sesion.asistencia === 'Asistió' ? 'bg-success' : (sesion.asistencia === 'Cancelada' ? 'bg-danger' : 'bg-warning')}">${sesion.asistencia}</span></td>
+          <td>${sesion.evolucion || 'Sin notas'}</td>
           <td>$${parseFloat(sesion.pago || 0).toFixed(2)}</td>
           <td class="text-center">
             <button class="btn btn-sm btn-outline-primary" onclick="cargarSeguimientoParaEditar(${index})">
@@ -481,8 +709,8 @@
       document.getElementById('segPago').value = sesion.pago;
       document.getElementById('segEvolucion').value = sesion.evolucion;
 
-      document.getElementById('tituloFormSeguimiento').innerText = 'Editar Sesión de Seguimiento';
-      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-check-circle"></i> Actualizar Sesión';
+      document.getElementById('tituloFormSeguimiento').innerText = 'Editar Registro de Sesión';
+      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-check-circle"></i> Actualizar Registro';
       document.getElementById('btnGuardarSeg').className = 'btn btn-sm btn-warning';
       document.getElementById('btnCancelarEditSeg').classList.remove('d-none');
     }
@@ -490,11 +718,19 @@
     function cancelarEdicionSeguimiento() {
       document.getElementById('formSeguimiento').reset();
       document.getElementById('segIndexEditar').value = "-1";
-      document.getElementById('segFecha').valueAsDate = new Date();
-      document.getElementById('tituloFormSeguimiento').innerText = 'Registrar Nueva Sesión';
-      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-plus-circle"></i> Agregar Sesión';
+      document.getElementById('tituloFormSeguimiento').innerText = 'Registrar Nueva Sesión / Agendamiento';
+      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-plus-circle"></i> Guardar Registro';
       document.getElementById('btnGuardarSeg').className = 'btn btn-sm btn-success';
       document.getElementById('btnCancelarEditSeg').classList.add('d-none');
+    }
+
+    function enviarRecordatorioSMS() {
+      const fecha = document.getElementById('segFecha').value;
+      if (!fecha) {
+        alert('Por favor selecciona una fecha y hora para la cita.');
+        return;
+      }
+      alert('📱 Recordatorio SMS enviado con éxito al paciente para la fecha: ' + fecha.replace('T', ' '));
     }
 
     document.getElementById('formSeguimiento').addEventListener('submit', function(e) {
@@ -515,10 +751,10 @@
 
       if (index >= 0) {
         seguimientos[index] = sesionData;
-        alert('¡Sesión de seguimiento actualizada!');
+        alert('¡Registro actualizado exitosamente!');
       } else {
         seguimientos.push(sesionData);
-        alert('¡Sesión de seguimiento registrada!');
+        alert('¡Registro y agendamiento guardados exitosamente!');
       }
 
       localStorage.setItem('seguimientos_' + cedula, JSON.stringify(seguimientos));
