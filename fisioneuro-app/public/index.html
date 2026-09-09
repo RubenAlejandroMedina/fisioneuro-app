@@ -76,6 +76,9 @@
       <div class="col-md-10 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2>Directorio de Pacientes</h2>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoPaciente">
+            <i class="bi bi-person-plus-fill me-2"></i>Agregar Paciente
+          </button>
         </div>
 
         <!-- TABLA DE PACIENTES -->
@@ -92,38 +95,47 @@
                 </tr>
               </thead>
               <tbody id="tablaPacientes">
-                <tr>
-                  <td>1850489434</td>
-                  <td><b>Ruben Alejandro Medina Montero</b></td>
-                  <td>0993037447</td>
-                  <td>rubenalejandromedinamontero@gmail.com</td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('1850489434', 'Ruben Alejandro Medina Montero', '0993037447')">
-                      <i class="bi bi-file-earmark-medical"></i> Historia
-                    </button>
-                    <button class="btn btn-sm btn-outline-success" onclick="abrirSeguimiento('1850489434')">
-                      <i class="bi bi-activity"></i> Seguimiento
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1804620803</td>
-                  <td><b>Anderson Medina</b></td>
-                  <td>0988168010</td>
-                  <td>andersonmedina1998@gmail.com</td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('1804620803', 'Anderson Medina', '0988168010')">
-                      <i class="bi bi-file-earmark-medical"></i> Historia
-                    </button>
-                    <button class="btn btn-sm btn-outline-success" onclick="abrirSeguimiento('1804620803')">
-                      <i class="bi bi-activity"></i> Seguimiento
-                    </button>
-                  </td>
-                </tr>
+                <!-- Se puebla dinámicamente -->
               </tbody>
             </table>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AGREGAR PACIENTE -->
+  <div class="modal fade" id="modalNuevoPaciente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Nuevo Paciente</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="formNuevoPaciente" onsubmit="guardarNuevoPaciente(event)">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Cédula</label>
+              <input type="text" id="nuevoCedula" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nombre Completo</label>
+              <input type="text" id="nuevoNombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Teléfono</label>
+              <input type="text" id="nuevoTelefono" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Email</label>
+              <input type="email" id="nuevoEmail" class="form-control" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar Paciente</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -146,7 +158,6 @@
             <!-- PESTAÑA FORMULARIO COMPLETO -->
             <div class="tab-pane fade show active" id="tab-formulario">
               
-              <!-- Sub-pestañas internas de la Historia Clínica -->
               <ul class="nav nav-pills mb-3 bg-light p-2 rounded" id="subTabsHistoria" role="tablist">
                 <li class="nav-item"><button class="nav-link active py-1" data-bs-toggle="tab" data-bs-target="#tab-filiacion">1. Datos y Antecedentes</button></li>
                 <li class="nav-item"><button class="nav-link py-1" data-bs-toggle="tab" data-bs-target="#tab-dolor">2. Enfermedad y Dolor</button></li>
@@ -248,14 +259,7 @@
                             <th>I</th>
                           </tr>
                         </thead>
-                        <tbody id="tablaEvalMuscular">
-                          <!-- Miembro Superior -->
-                          <tr class="table-secondary"><td colspan="5" class="fw-bold text-start">Miembro Superior</td></tr>
-                          <script>
-                            const movsSup = ['Fx de hombro','Ex de hombro','Abd de hombro','Add de hombro','Fx de codo','Ex de codo','Fx de muñeca','Ex de muñeca'];
-                            const movsInf = ['Fx de cadera','Ex de cadera','Abd de cadera','Add de cadera','Fx de rodilla','Ex de rodilla','Fx de tobillo','Ex de tobillo'];
-                          </script>
-                        </tbody>
+                        <tbody id="tablaEvalMuscular"></tbody>
                       </table>
                     </div>
                   </div>
@@ -265,7 +269,6 @@
                     <h6 class="fw-bold text-primary mb-3">Goniometría</h6>
                     
                     <div class="row g-3">
-                      <!-- Columna Cervical -->
                       <div class="col-md-6">
                         <h7 class="fw-bold">Columna Cervical</h7>
                         <table class="table table-bordered table-sm text-center mt-1">
@@ -281,7 +284,6 @@
                         </table>
                       </div>
 
-                      <!-- Columna Lumbar -->
                       <div class="col-md-6">
                         <h7 class="fw-bold">Columna Lumbar</h7>
                         <table class="table table-bordered table-sm text-center mt-1">
@@ -297,7 +299,6 @@
                         </table>
                       </div>
 
-                      <!-- Miembro Superior Goniometria -->
                       <div class="col-md-6">
                         <h7 class="fw-bold">Hombro, Codo y Muñeca</h7>
                         <table class="table table-bordered table-sm text-center mt-1">
@@ -319,7 +320,6 @@
                         </table>
                       </div>
 
-                      <!-- Miembro Inferior Goniometria -->
                       <div class="col-md-6">
                         <h7 class="fw-bold">Cadera, Rodilla y Tobillo</h7>
                         <table class="table table-bordered table-sm text-center mt-1">
@@ -438,8 +438,75 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Generar dinámicamente las filas de la tabla de Evaluación Muscular
+    const movsSup = ['Fx de hombro','Ex de hombro','Abd de hombro','Add de hombro','Fx de codo','Ex de codo','Fx de muñeca','Ex de muñeca'];
+    const movsInf = ['Fx de cadera','Ex de cadera','Abd de cadera','Add de cadera','Fx de rodilla','Ex de rodilla','Fx de tobillo','Ex de tobillo'];
+    
+    // Lista por defecto de pacientes
+    let pacientesBase = [
+      { cedula: "1850489434", nombre: "Ruben Alejandro Medina Montero", telefono: "0993037447", email: "rubenalejandromedinamontero@gmail.com" },
+      { cedula: "1804620803", nombre: "Anderson Medina", telefono: "0988168010", email: "andersonmedina1998@gmail.com" }
+    ];
+
+    let imagenesStore = { prevDiag: '', prevPostura: '' };
+
     window.onload = function() {
+      inicializarPacientes();
+      construirTablaMuscular();
+    };
+
+    function inicializarPacientes() {
+      if (!localStorage.getItem('pacientes_lista')) {
+        localStorage.setItem('pacientes_lista', JSON.stringify(pacientesBase));
+      }
+      renderizarPacientes();
+    }
+
+    function renderizarPacientes() {
+      const lista = JSON.parse(localStorage.getItem('pacientes_lista')) || [];
+      const tbody = document.getElementById('tablaPacientes');
+      tbody.innerHTML = '';
+
+      lista.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.cedula}</td>
+          <td><b>${p.nombre}</b></td>
+          <td>${p.telefono}</td>
+          <td>${p.email}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('${p.cedula}', '${p.nombre}', '${p.telefono}')">
+              <i class="bi bi-file-earmark-medical"></i> Historia
+            </button>
+            <button class="btn btn-sm btn-outline-success" onclick="abrirSeguimiento('${p.cedula}')">
+              <i class="bi bi-activity"></i> Seguimiento
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function guardarNuevoPaciente(e) {
+      e.preventDefault();
+      const nuevo = {
+        cedula: document.getElementById('nuevoCedula').value.trim(),
+        nombre: document.getElementById('nuevoNombre').value.trim(),
+        telefono: document.getElementById('nuevoTelefono').value.trim(),
+        email: document.getElementById('nuevoEmail').value.trim()
+      };
+
+      const lista = JSON.parse(localStorage.getItem('pacientes_lista')) || [];
+      lista.push(nuevo);
+      localStorage.setItem('pacientes_lista', JSON.stringify(lista));
+
+      renderizarPacientes();
+      document.getElementById('formNuevoPaciente').reset();
+      
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalNuevoPaciente'));
+      modal.hide();
+    }
+
+    function construirTablaMuscular() {
       const tbody = document.getElementById('tablaEvalMuscular');
       let html = '<tr class="table-secondary"><td colspan="5" class="fw-bold text-start">Miembro Superior</td></tr>';
       
@@ -465,13 +532,17 @@
       });
 
       tbody.innerHTML = html;
-    };
+    }
 
     function previewImg(input, targetId) {
       const target = document.getElementById(targetId);
       if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = e => { target.src = e.target.result; target.classList.remove('d-none'); }
+        reader.onload = e => { 
+          target.src = e.target.result; 
+          target.classList.remove('d-none');
+          imagenesStore[targetId] = e.target.result;
+        }
         reader.readAsDataURL(input.files[0]);
       }
     }
@@ -508,9 +579,11 @@
       document.getElementById('vistaLogin').classList.remove('d-none');
     }
 
-    // --- HISTORIA CLÍNICA ---
+    <!-- HISTORIA CLÍNICA -->
     function abrirHistoria(cedula, nombre, celular) {
       document.getElementById('formHistoriaClinica').reset();
+      imagenesStore = { prevDiag: '', prevPostura: '' };
+      
       document.getElementById('hcFechaApertura').valueAsDate = new Date();
       document.getElementById('hcCedula').value = cedula;
       document.getElementById('hcNombre').value = nombre;
@@ -613,6 +686,22 @@
         document.getElementById('hcTratamiento').value = hc.tratamiento || '';
         document.getElementById('hcEjerciciosCasa').value = hc.ejerciciosCasa || '';
 
+        // Cargar Goniometría
+        if (hc.goniometria) {
+          Object.keys(hc.goniometria).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = hc.goniometria[id];
+          });
+        }
+
+        // Cargar Eval Muscular
+        if (hc.evalMuscular) {
+          Object.keys(hc.evalMuscular).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = hc.evalMuscular[id];
+          });
+        }
+
         const formTab = new bootstrap.Tab(document.getElementById('btn-tab-form'));
         formTab.show();
       }
@@ -621,6 +710,19 @@
     document.getElementById('formHistoriaClinica').addEventListener('submit', function(e) {
       e.preventDefault();
       const cedula = document.getElementById('hcCedula').value;
+      
+      // Capturar Goniometría
+      const goniometriaData = {};
+      document.querySelectorAll('#tab-goniometria input[type="text"]').forEach(input => {
+        if(input.id) goniometriaData[input.id] = input.value;
+      });
+
+      // Capturar Eval Muscular
+      const muscularData = {};
+      document.querySelectorAll('#tablaEvalMuscular input[type="text"]').forEach(input => {
+        if(input.id) muscularData[input.id] = input.value;
+      });
+
       const datosHistoria = {
         fechaApertura: document.getElementById('hcFechaApertura').value,
         fechaNacimiento: document.getElementById('hcFechaNacimiento').value,
@@ -646,19 +748,25 @@
         escalasEspec: document.getElementById('hcEscalasEspec').value,
         diagFisio: document.getElementById('hcDiagFisio').value,
         tratamiento: document.getElementById('hcTratamiento').value,
-        ejerciciosCasa: document.getElementById('hcEjerciciosCasa').value
+        ejerciciosCasa: document.getElementById('hcEjerciciosCasa').value,
+        goniometria: goniometriaData,
+        evalMuscular: muscularData
       };
 
-      localStorage.setItem('historia_' + cedula, JSON.stringify(datosHistoria));
-      alert('¡Historia clínica guardada con éxito!');
-      cargarVistaHistorias(cedula);
-      
-      const modalElement = document.getElementById('modalHistoriaClinica');
-      const modal = bootstrap.Modal.getInstance(modalElement);
-      modal.hide();
+      try {
+        localStorage.setItem('historia_' + cedula, JSON.stringify(datosHistoria));
+        alert('¡Historia clínica guardada con éxito!');
+        cargarVistaHistorias(cedula);
+        
+        const modalElement = document.getElementById('modalHistoriaClinica');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
+      } catch (error) {
+        alert('Error: Exceso de tamaño de datos. Intenta guardar sin archivos pesados.');
+      }
     });
 
-    // --- SEGUIMIENTO, CITAS Y PAGOS ---
+    <!-- SEGUIMIENTO, CITAS Y PAGOS -->
     function abrirSeguimiento(cedula) {
       cancelarEdicionSeguimiento();
       document.getElementById('segCedulaPaciente').value = cedula;
