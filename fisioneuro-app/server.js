@@ -4,6 +4,8 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
+
+// Carpeta de archivos estáticos (asegúrate de que tu carpeta se llame 'public' o 'público' según corresponda)
 app.use(express.static(path.join(__dirname, 'public')));
 
 const pool = new Pool({
@@ -11,9 +13,8 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Login unificado flexible
+// Login unificado flexible (Soporta búsqueda por email o cédula guardada en email)
 app.post('/api/login', async (req, res) => {
-  // Acepta 'usuario' o 'email' indistintamente
   const identificador = req.body.usuario || req.body.email;
   const password = req.body.password;
 
@@ -22,9 +23,10 @@ app.post('/api/login', async (req, res) => {
   }
 
   try {
+    // Buscamos coincidencia exacta por email/cédula y contraseña
     const result = await pool.query(
-      'SELECT * FROM usuarios WHERE LOWER(email) = LOWER($1) AND password_hash = $2',
-      [identificador, password]
+      'SELECT * FROM usuarios WHERE (LOWER(email) = LOWER($1) OR email = $1) AND password_hash = $2',
+      [identificador.trim(), password.trim()]
     );
 
     if (result.rows.length === 0) {
@@ -62,15 +64,19 @@ app.post('/api/pacientes', async (req, res) => {
   try {
     await client.query('BEGIN');
     
+    // Inserta o actualiza el usuario vinculado usando la cédula como email/identificador y contraseña inicial
     await client.query(
       `INSERT INTO usuarios (nombre, apellido, email, password_hash, rol) 
-       VALUES ($1, $2, $3, $4, 'paciente') ON CONFLICT (email) DO NOTHING`,
+       VALUES ($1, $2, $3, $4, 'paciente') 
+       ON CONFLICT (email) DO UPDATE SET nombre = EXCLUDED.nombre, apellido = EXCLUDED.apellido`,
       [nombre, apellido, cedula, cedula]
     );
 
     const pac = await client.query(
       `INSERT INTO pacientes (cedula, nombre, apellido, fecha_nacimiento, telefono, email, direccion) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7) 
+       ON CONFLICT (cedula) DO UPDATE SET telefono = EXCLUDED.telefono, email = EXCLUDED.email, direccion = EXCLUDED.direccion
+       RETURNING *`,
       [cedula, nombre, apellido, fecha_nacimiento, telefono, email, direccion]
     );
 
@@ -82,6 +88,15 @@ app.post('/api/pacientes', async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+// Rutas explícitas opcionales para mayor seguridad en la navegación por roles
+app.get('/paciente', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'paciente.html'));
+});
+
+app.get('/especialista', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'especialista.html'));
 });
 
 const PORT = process.env.PORT || 3000;
