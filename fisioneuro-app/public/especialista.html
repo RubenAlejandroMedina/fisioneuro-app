@@ -128,16 +128,16 @@
           </div>
         </div>
 
-        <!-- SECCIÓN GOOGLE CALENDAR -->
+<!-- SECCIÓN GOOGLE CALENDAR (CUENTA FISIONEURO) -->
         <div id="seccionGoogleCalendar" class="d-none">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h3 class="fw-bold mb-0">Google Calendar - FisioNeuro</h3>
-              <p class="text-muted small">Sincronización directa con la cuenta institucional de Google</p>
+              <p class="text-muted small">Vinculado a la cuenta institucional: <b>fisioneuroecu@gmail.com</b></p>
             </div>
             <div>
-              <a href="https://calendar.google.com" target="_blank" class="btn btn-primary shadow-sm me-2">
-                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Cuenta Google Calendar
+              <a href="https://calendar.google.com/calendar/u/?authuser=fisioneuroecu@gmail.com" target="_blank" class="btn btn-primary shadow-sm me-2">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Calendario FisioNeuro
               </a>
               <button class="btn btn-outline-success shadow-sm" onclick="sincronizarCitasAutomaticas()">
                 <i class="bi bi-arrow-repeat me-1"></i> Sincronizar Citas
@@ -147,18 +147,16 @@
 
           <div class="card custom-card p-3 mb-4">
             <div class="alert alert-info small mb-3">
-              <i class="bi bi-info-circle-fill me-1"></i> Vinculado a la cuenta de Google de la aplicación. Al registrar una cita en el perfil de cada paciente, puedes enviarla automáticamente a este calendario para la gestión de turnos del especialista.
+              <i class="bi bi-info-circle-fill me-1"></i> Este visor está configurado para mostrar el calendario de <b>fisioneuroecu@gmail.com</b>. Asegúrate de tener iniciada sesión con esa cuenta en tu navegador.
             </div>
             <div class="ratio ratio-16x9 border rounded overflow-hidden shadow-sm">
-              <iframe src="https://calendar.google.com/calendar/embed?src=en.usa%23holiday%40group.v.calendar.google.com&ctz=America%2FGuayaquil" style="border: 0" width="100%" height="550" frameborder="0" scrolling="no"></iframe>
+              <!-- Visor embebido apuntando al correo institucional de FisioNeuro -->
+              <iframe src="https://calendar.google.com/calendar/embed?src=fisioneuroecu%40gmail.com&ctz=America%2FGuayaquil" style="border: 0" width="100%" height="550" frameborder="0" scrolling="no"></iframe>
             </div>
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-
+        
   <!-- MODAL: NUEVO PACIENTE -->
   <div class="modal fade" id="modalNuevoPaciente" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
