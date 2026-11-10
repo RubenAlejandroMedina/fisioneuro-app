@@ -953,7 +953,7 @@
       }
       alert('📱 Recordatorio SMS simulado enviado con éxito al celular del paciente para la fecha: ' + fecha.replace('T', ' '));
     }
-
+    
     function agendarEnGoogleCalendarDesdeSeguimiento() {
       const fecha = document.getElementById('segFecha').value;
       const evolucion = document.getElementById('segEvolucion').value || 'Sesión Fisioterapia FisioNeuro';
@@ -962,6 +962,7 @@
         return;
       }
       const fechaInicio = new Date(fecha).toISOString().replace(/-|:|\.\d\d\d/g, "");
+      // Enlace universal de Google Calendar para eventos
       const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+FisioNeuro&dates=${fechaInicio}/${fechaInicio}&details=${encodeURIComponent(evolucion)}`;
       window.open(url, '_blank');
     }
