@@ -6,41 +6,21 @@
   <title>FisioNeuro - Panel de Especialista</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-  <style>
-    :root {
-      --primary-color: #0284c7;
-      --sidebar-bg: #0f172a;
-    }
-    body { background-color: #f8fafc; font-family: 'Segoe UI', system-ui, sans-serif; }
-    .sidebar { min-height: 100vh; background: var(--sidebar-bg); color: white; }
-    .sidebar .nav-link { color: #94a3b8; padding: 12px 20px; margin: 4px 0; border-radius: 8px; font-weight: 500; transition: all 0.2s; }
-    .sidebar .nav-link.active, .sidebar .nav-link:hover { background: var(--primary-color); color: white; }
-    .custom-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); background: white; }
-    .table-eval input { width: 60px; text-align: center; }
-    @media print {
-      body * { visibility: hidden; }
-      #contenedorHistorias, #contenedorHistorias * { visibility: visible; }
-      #contenedorHistorias { position: absolute; left: 0; top: 0; width: 100%; }
-      .btn, .modal-header, .nav-tabs { display: none !important; }
-    }
-  </style>
 </head>
-<body>
+<body class="bg-light">
 
-  <div id="vistaDashboard" class="container-fluid">
+  <div class="container-fluid">
     <div class="row">
       <!-- SIDEBAR -->
-      <div class="col-md-2 sidebar p-3 d-flex flex-column justify-content-between">
+      <div class="col-md-2 bg-dark text-white min-vh-100 p-3 d-flex flex-column justify-content-between">
         <div>
-          <h4 class="text-primary fw-bold mb-4 px-2"><i class="bi bi-heart-pulse-fill me-2"></i>FisioNeuro</h4>
+          <h4 class="text-info fw-bold mb-4"><i class="bi bi-heart-pulse-fill me-2"></i>FisioNeuro</h4>
           <ul class="nav nav-pills flex-column" id="menuNavegacion">
-            <li class="nav-item">
-              <a href="#" class="nav-link active" onclick="mostrarSeccion('pacientes', this)"><i class="bi bi-people-fill me-2"></i>Pacientes</a>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white active" onclick="mostrarSeccion('pacientes', this)"><i class="bi bi-people-fill me-2"></i>Pacientes</a>
             </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link" onclick="mostrarSeccion('agendaGlobal', this)"><i class="bi bi-calendar-check-fill me-2"></i>Citas y Cobros</a>
+            <li class="nav-item mb-2">
+              <a class="nav-link text-white" onclick="mostrarSeccion('agendaGlobal', this)"><i class="bi bi-calendar-check-fill me-2"></i>Citas y Cobros</a>
             </li>
           </ul>
         </div>
@@ -54,16 +34,13 @@
         <!-- SECCIÓN PACIENTES -->
         <div id="seccionPacientes">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <h3 class="fw-bold mb-0">Directorio de Pacientes</h3>
-              <p class="text-muted small">Gestión de expedientes y atenciones clínicas</p>
-            </div>
-            <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoPaciente">
+            <h3>Directorio de Pacientes (Base de Datos)</h3>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevoPaciente">
               <i class="bi bi-person-plus-fill me-2"></i>Agregar Paciente
             </button>
           </div>
 
-          <div class="card custom-card p-3">
+          <div class="card p-3 shadow-sm border-0">
             <div class="table-responsive">
               <table class="table table-hover align-middle">
                 <thead class="table-light">
@@ -75,341 +52,44 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody id="tablaPacientes"></tbody>
+                <tbody id="tablaPacientes">
+                  <tr><td colspan="5" class="text-center">Cargando pacientes desde la base de datos...</td></tr>
+                </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- SECCIÓN AGENDA GLOBAL -->
+        <!-- SECCIÓN AGENDA GLOBAL Y COBROS -->
         <div id="seccionAgendaGlobal" class="d-none">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <h3 class="fw-bold mb-0">Gestión Global de Citas y Cobros</h3>
-              <p class="text-muted small">Control financiero y agendamiento unificado</p>
-            </div>
-          </div>
-
+          <h3 class="mb-4">Gestión Global de Citas y Cobros</h3>
           <div class="row g-3 mb-4">
             <div class="col-md-6">
-              <div class="card custom-card p-3 border-start border-4 border-success">
-                <span class="text-muted small">Total Recaudado (Cobros)</span>
+              <div class="card p-3 border-start border-4 border-success shadow-sm">
+                <span class="text-muted">Total Recaudado</span>
                 <h3 class="fw-bold text-success mb-0" id="statTotalRecaudado">$0.00</h3>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="card custom-card p-3 border-start border-4 border-warning">
-                <span class="text-muted small">Total Citas Pendientes/Agendadas</span>
+              <div class="card p-3 border-start border-4 border-warning shadow-sm">
+                <span class="text-muted">Citas Pendientes</span>
                 <h3 class="fw-bold text-warning mb-0" id="statCitasPendientes">0</h3>
               </div>
             </div>
           </div>
 
-          <div class="card custom-card p-3 mb-4">
-            <div class="row g-3 align-items-center">
-              <div class="col-md-4">
-                <label class="form-label small fw-bold">Filtrar por Fecha</label>
-                <input type="date" id="filtroFechaAgenda" class="form-control form-control-sm" onchange="filtrarAgendaGlobal()">
-              </div>
-              <div class="col-md-4">
-                <label class="form-label small fw-bold">Filtrar por Estado</label>
-                <select id="filtroEstadoAgenda" class="form-select form-select-sm" onchange="filtrarAgendaGlobal()">
-                  <option value="TODOS">Todos los Estados</option>
-                  <option value="Asistió">Asistió</option>
-                  <option value="Pendiente">Pendiente</option>
-                  <option value="Reprogramada">Reprogramada</option>
-                  <option value="Cancelada">Cancelada</option>
-                </select>
-              </div>
-              <div class="col-md-4 d-flex align-items-end">
-                <button class="btn btn-sm btn-outline-secondary w-100" onclick="limpiarFiltrosAgenda()"><i class="bi bi-x-circle me-1"></i> Limpiar Filtros</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="card custom-card p-3">
-            <div class="table-responsive">
-              <table class="table table-hover align-middle">
-                <thead class="table-light">
-                  <tr>
-                    <th>Fecha / Hora</th>
-                    <th>Paciente</th>
-                    <th>Estado</th>
-                    <th>Evolución / Nota</th>
-                    <th>Pago Recibido</th>
-                  </tr>
-                </thead>
-                <tbody id="tablaGlobalAgenda"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: NUEVO PACIENTE -->
-  <div class="modal fade" id="modalNuevoPaciente" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Nuevo Paciente</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <form id="formNuevoPaciente" onsubmit="guardarNuevoPaciente(event)">
-          <div class="modal-body">
-            <div class="mb-3"><label class="form-label fw-bold">Cédula</label><input type="text" id="nuevoCedula" class="form-control" required></div>
-            <div class="mb-3"><label class="form-label fw-bold">Nombre Completo</label><input type="text" id="nuevoNombre" class="form-control" required></div>
-            <div class="mb-3"><label class="form-label fw-bold">Teléfono</label><input type="text" id="nuevoTelefono" class="form-control" required></div>
-            <div class="mb-3"><label class="form-label fw-bold">Email</label><input type="email" id="nuevoEmail" class="form-control" required></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Guardar Paciente</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: HISTORIA CLÍNICA INTEGRAL -->
-  <div class="modal fade" id="modalHistoriaClinica" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
-          <h5 class="modal-title"><i class="bi bi-journal-medical me-2"></i>Historia Clínica Integrada</h5>
-          <div>
-            <button class="btn btn-sm btn-light me-2" onclick="imprimirHistoria()"><i class="bi bi-printer me-1"></i> Imprimir</button>
-            <button class="btn btn-sm btn-outline-light me-3" onclick="exportarPDF()"><i class="bi bi-file-earmark-pdf me-1"></i> PDF</button>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-        </div>
-        <div class="modal-body">
-          <ul class="nav nav-tabs mb-3" id="historiaTabs" role="tablist">
-            <li class="nav-item"><button class="nav-link active" id="btn-tab-form" data-bs-toggle="tab" data-bs-target="#tab-formulario">Formulario Completo</button></li>
-            <li class="nav-item"><button class="nav-link" id="btn-tab-registros" data-bs-toggle="tab" data-bs-target="#tab-registros">📋 Historias Registradas</button></li>
-          </ul>
-
-          <div class="tab-content">
-            <!-- TAB FORMULARIO COMPLETO -->
-            <div class="tab-pane fade show active" id="tab-formulario">
-              <form id="formHistoriaClinica">
-                <div class="accordion" id="accordionHistoria">
-                  
-                  <!-- 1. DATOS GENERALES -->
-                  <div class="accordion-item">
-                    <h2 class="accordion-header">
-                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#secGeneral">
-                        1. Datos Generales del Paciente
-                      </button>
-                    </h2>
-                    <div id="secGeneral" class="accordion-collapse collapse show">
-                      <div class="accordion-body">
-                        <div class="row g-3">
-                          <div class="col-md-3"><label class="form-label fw-bold">Fecha Apertura</label><input type="date" id="hcFechaApertura" class="form-control" required></div>
-                          <div class="col-md-3"><label class="form-label fw-bold">Cédula</label><input type="text" id="hcCedula" class="form-control" readonly></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Nombre Completo</label><input type="text" id="hcNombre" class="form-control" readonly></div>
-                          <div class="col-md-3"><label class="form-label fw-bold">Fecha Nacimiento</label><input type="date" id="hcFechaNacimiento" class="form-control"></div>
-                          <div class="col-md-2"><label class="form-label fw-bold">Edad</label><input type="number" id="hcEdad" class="form-control"></div>
-                          <div class="col-md-3">
-                            <label class="form-label fw-bold">Género</label>
-                            <select id="hcGenero" class="form-select">
-                              <option value="Masculino">Masculino</option>
-                              <option value="Femenino">Femenino</option>
-                              <option value="Otro">Otro</option>
-                            </select>
-                          </div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Ocupación</label><input type="text" id="hcOcupacion" class="form-control"></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Médico Tratante</label><input type="text" id="hcMedico" class="form-control"></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Diagnóstico Médico</label><input type="text" id="hcDiagMedico" class="form-control"></div>
-                          <div class="col-12"><label class="form-label fw-bold">Motivo de Consulta</label><textarea id="hcMotivo" class="form-control" rows="2"></textarea></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 2. ANTECEDENTES -->
-                  <div class="accordion-item">
-                    <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secAntecedentes">
-                        2. Antecedentes Mórbidos y Personales
-                      </button>
-                    </h2>
-                    <div id="secAntecedentes" class="accordion-collapse collapse">
-                      <div class="accordion-body">
-                        <div class="row g-3">
-                          <div class="col-md-6"><label class="form-label fw-bold">Enfermedades Previas</label><textarea id="hcEnfermedadesPrevias" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Quirúrgicas / Traumatismos</label><textarea id="hcQuirurgicas" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Medicamentos Actuales</label><textarea id="hcMedicamentos" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Alergias</label><textarea id="hcAlergias" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Antecedentes Familiares</label><textarea id="hcAntecedentesFam" class="form-control" rows="2"></textarea></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 3. EVALUACIÓN DE SÍNTOMAS Y EVA -->
-                  <div class="accordion-item">
-                    <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secSintomas">
-                        3. Síntomas Actuales y Escala Analógica del Dolor (EVA)
-                      </button>
-                    </h2>
-                    <div id="secSintomas" class="accordion-collapse collapse">
-                      <div class="accordion-body">
-                        <div class="row g-3">
-                          <div class="col-md-8"><label class="form-label fw-bold">Descripción de Síntomas</label><textarea id="hcSintomas" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4">
-                            <label class="form-label fw-bold">Nivel de Dolor (EVA: <span id="evaValor" class="text-danger fw-bold">5</span>/10)</label>
-                            <input type="range" class="form-range" min="0" max="10" value="5" id="hcRangoDolor" oninput="document.getElementById('evaValor').innerText = this.value">
-                          </div>
-                          <div class="col-12"><label class="form-label fw-bold">Ayudas Técnicas / Órtesis</label><input type="text" id="hcAyudasTecnicas" class="form-control"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 4. EVALUACIÓN NEUROMUSCULAR Y NEUROLÓGICA -->
-                  <div class="accordion-item">
-                    <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secNeuromuscular">
-                        4. Examen Físico y Neuromuscular
-                      </button>
-                    </h2>
-                    <div id="secNeuromuscular" class="accordion-collapse collapse">
-                      <div class="accordion-body">
-                        <div class="row g-3">
-                          <div class="col-md-4"><label class="form-label fw-bold">Tono Muscular</label><input type="text" id="hcTono" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Reflejos Osteotendinosos</label><input type="text" id="hcReflejos" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Sensibilidad (Superficial/Profunda)</label><input type="text" id="hcSensibilidad" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Coordinación</label><input type="text" id="hcCoordinacion" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Equilibrio</label><input type="text" id="hcEquilibrio" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Escalas Específicas</label><input type="text" id="hcEscalasEspec" class="form-control"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 5. GONIOMETRÍA Y EVALUACIÓN MUSCULAR -->
-                  <div class="accordion-item">
-                    <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secGoniometriaTablas">
-                        5. Goniometría y Balance Muscular
-                      </button>
-                    </h2>
-                    <div id="secGoniometriaTablas" class="accordion-collapse collapse">
-                      <div class="accordion-body">
-                        <div id="tab-goniometria" class="table-responsive mb-3">
-                          <h6>Mediciones Goniométricas</h6>
-                          <table class="table table-sm table-bordered text-center align-middle">
-                            <thead class="table-light">
-                              <tr><th>Articulación / Movimiento</th><th>Izquierda (º)</th><th>Derecha (º)</th></tr>
-                            </thead>
-                            <tbody>
-                              <tr><td>Hombro Flexión/Extensión</td><td><input type="text" id="gon_hombro_flex_izq" class="form-control form-control-sm text-center"></td><td><input type="text" id="gon_hombro_flex_der" class="form-control form-control-sm text-center"></td></tr>
-                              <tr><td>Codo Flexión/Extensión</td><td><input type="text" id="gon_codo_flex_izq" class="form-control form-control-sm text-center"></td><td><input type="text" id="gon_codo_flex_der" class="form-control form-control-sm text-center"></td></tr>
-                              <tr><td>Rodilla Flexión/Extensión</td><td><input type="text" id="gon_rodilla_flex_izq" class="form-control form-control-sm text-center"></td><td><input type="text" id="gon_rodilla_flex_der" class="form-control form-control-sm text-center"></td></tr>
-                            </tbody>
-                          </table>
-                        </div>
-
-                        <div id="tablaEvalMuscular" class="table-responsive">
-                          <h6>Balance Muscular (Escala Daniels 0-5)</h6>
-                          <table class="table table-sm table-bordered text-center align-middle">
-                            <thead class="table-light">
-                              <tr><th>Grupo Muscular</th><th>Izquierda</th><th>Derecha</th></tr>
-                            </thead>
-                            <tbody>
-                              <tr><td>Flexores de Hombro</td><td><input type="text" id="musc_hombro_izq" class="form-control form-control-sm text-center"></td><td><input type="text" id="musc_hombro_der" class="form-control form-control-sm text-center"></td></tr>
-                              <tr><td>Cuádriceps</td><td><input type="text" id="musc_quad_izq" class="form-control form-control-sm text-center"></td><td><input type="text" id="musc_quad_der" class="form-control form-control-sm text-center"></td></tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 6. DIAGNÓSTICO Y TRATAMIENTO FISIOTERAPÉUTICO -->
-                  <div class="accordion-item">
-                    <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secTratamiento">
-                        6. Diagnóstico Fisioterapéutico y Plan de Tratamiento
-                      </button>
-                    </h2>
-                    <div id="secTratamiento" class="accordion-collapse collapse">
-                      <div class="accordion-body">
-                        <div class="row g-3">
-                          <div class="col-12"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Plan de Tratamiento / Objetivos</label><textarea id="hcTratamiento" class="form-control" rows="3"></textarea></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Ejercicios para Casa</label><textarea id="hcEjerciciosCasa" class="form-control" rows="3"></textarea></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="modal-footer mt-3">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                  <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Guardar Historia Clínica</button>
-                </div>
-              </form>
-            </div>
-
-            <!-- TAB HISTORIAS REGISTRADAS -->
-            <div class="tab-pane fade" id="tab-registros">
-              <div id="contenedorHistorias"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: SEGUIMIENTO Y AGENDAMIENTO -->
-  <div class="modal fade" id="modalSeguimiento" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title"><i class="bi bi-activity me-2"></i>Seguimiento de Progreso, Citas y Pagos</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="formSeguimiento" class="bg-light p-3 rounded mb-4">
-            <input type="hidden" id="segCedulaPaciente">
-            <input type="hidden" id="segIndexEditar" value="-1">
-            <h6 class="fw-bold mb-3" id="tituloFormSeguimiento">Registrar Nueva Sesión / Agendamiento</h6>
-            <div class="row g-2">
-              <div class="col-md-4"><label class="form-label small">Fecha y Hora</label><input type="datetime-local" id="segFecha" class="form-control form-control-sm" required></div>
-              <div class="col-md-4">
-                <label class="form-label small">Estado</label>
-                <select id="segAsistencia" class="form-select form-select-sm">
-                  <option value="Asistió">Asistió</option>
-                  <option value="Pendiente">Pendiente</option>
-                  <option value="Reprogramada">Reprogramada</option>
-                  <option value="Cancelada">Cancelada</option>
-                </select>
-              </div>
-              <div class="col-md-4"><label class="form-label small">Monto Pagado ($)</label><input type="number" step="0.01" id="segPago" class="form-control form-control-sm" placeholder="0.00"></div>
-              <div class="col-12"><label class="form-label small">Evolución / Tratamiento</label><textarea id="segEvolucion" class="form-control form-control-sm" rows="2"></textarea></div>
-              <div class="col-12 text-end mt-2">
-                <button type="button" class="btn btn-sm btn-info text-white me-2" onclick="enviarRecordatorioSMS()"><i class="bi bi-chat-left-dots me-1"></i> SMS Recordatorio</button>
-                <button type="button" id="btnCancelarEditSeg" class="btn btn-sm btn-secondary d-none me-2" onclick="cancelarEdicionSeguimiento()">Cancelar</button>
-                <button type="submit" id="btnGuardarSeg" class="btn btn-sm btn-success"><i class="bi bi-plus-circle me-1"></i> Guardar Registro</button>
-              </div>
-            </div>
-          </form>
-
-          <h6 class="fw-bold">Historial de Citas y Pagos</h6>
-          <div class="table-responsive">
+          <div class="card p-3 shadow-sm border-0">
             <table class="table table-hover align-middle">
               <thead class="table-light">
-                <tr><th>Fecha</th><th>Estado</th><th>Progreso</th><th>Pago</th><th class="text-center">Acción</th></tr>
+                <tr>
+                  <th>Fecha / Hora</th>
+                  <th>Paciente</th>
+                  <th>Estado</th>
+                  <th>Evolución</th>
+                  <th>Pago</th>
+                </tr>
               </thead>
-              <tbody id="listaSeguimientos">
-                <tr><td colspan="5" class="text-center text-muted">Sin registros aún</td></tr>
-              </tbody>
+              <tbody id="tablaGlobalAgenda"></tbody>
             </table>
           </div>
         </div>
@@ -417,444 +97,156 @@
     </div>
   </div>
 
+  <!-- MODAL NUEVO PACIENTE -->
+  <div class="modal fade" id="modalNuevoPaciente" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Nuevo Paciente</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="formNuevoPaciente" onsubmit="guardarNuevoPaciente(event)">
+          <div class="modal-body">
+            <div class="mb-3"><label class="form-label">Cédula</label><input type="text" id="nuevoCedula" class="form-control" required></div>
+            <div class="mb-3"><label class="form-label">Nombre</label><input type="text" id="nuevoNombre" class="form-control" required></div>
+            <div class="mb-3"><label class="form-label">Apellido</label><input type="text" id="nuevoApellido" class="form-control" required></div>
+            <div class="mb-3"><label class="form-label">Fecha de Nacimiento</label><input type="date" id="nuevoNacimiento" class="form-control"></div>
+            <div class="mb-3"><label class="form-label">Teléfono</label><input type="text" id="nuevoTelefono" class="form-control"></div>
+            <div class="mb-3"><label class="form-label">Email</label><input type="email" id="nuevoEmail" class="form-control"></div>
+            <div class="mb-3"><label class="form-label">Dirección</label><input type="text" id="nuevoDireccion" class="form-control"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar en Base de Datos</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL HISTORIA CLÍNICA -->
+  <div class="modal fade" id="modalHistoriaClinica" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Historia Clínica</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formHistoriaClinica" onsubmit="guardarHistoria(event)">
+            <input type="hidden" id="hcCedula">
+            <div class="mb-3"><label class="form-label">Diagnóstico</label><input type="text" id="hcDiag" class="form-control" required></div>
+            <div class="mb-3"><label class="form-label">Tratamiento</label><textarea id="hcTratamiento" class="form-control" rows="3" required></textarea></div>
+            <button type="submit" class="btn btn-success">Guardar Historia</button>
+          </form>
+          <div id="contenedorHistorias" class="mt-4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    let pacientesBase = [
-      { cedula: "1850489434", nombre: "Ruben Alejandro Medina Montero", telefono: "0993037447", email: "rubenalejandromedinamontero@gmail.com" },
-      { cedula: "1804620803", nombre: "Anderson Medina", telefono: "0988168010", email: "andersonmedina1998@gmail.com" }
-    ];
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarPacientesDB();
+    });
 
-    window.onload = function() {
-      inicializarPacientes();
-    };
-
-    function mostrarSeccion(seccion, elemento) {
-      document.querySelectorAll('#menuNavegacion .nav-link').forEach(el => el.classList.remove('active'));
-      elemento.classList.add('active');
+    function mostrarSeccion(seccion, el) {
+      document.querySelectorAll('#menuNavegacion .nav-link').forEach(n => n.classList.remove('active'));
+      if(el) el.classList.add('active');
 
       document.getElementById('seccionPacientes').classList.add('d-none');
       document.getElementById('seccionAgendaGlobal').classList.add('d-none');
 
-      if(seccion === 'pacientes') {
+      if (seccion === 'pacientes') {
         document.getElementById('seccionPacientes').classList.remove('d-none');
-      } else if(seccion === 'agendaGlobal') {
+        cargarPacientesDB();
+      } else if (seccion === 'agendaGlobal') {
         document.getElementById('seccionAgendaGlobal').classList.remove('d-none');
-        cargarAgendaGlobal();
       }
     }
 
-    function inicializarPacientes() {
-      if (!localStorage.getItem('pacientes_lista')) {
-        localStorage.setItem('pacientes_lista', JSON.stringify(pacientesBase));
+    // CARGAR PACIENTES DESDE EL SERVIDOR (POSTGRESQL)
+    async function cargarPacientesDB() {
+      try {
+        const response = await fetch('/api/pacientes');
+        const pacientes = await response.json();
+        const tbody = document.getElementById('tablaPacientes');
+        tbody.innerHTML = '';
+
+        if (!Array.isArray(pacientes) || pacientes.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No hay pacientes registrados en la base de datos.</td></tr>';
+          return;
+        }
+
+        pacientes.forEach(p => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${p.cedula}</td>
+              <td><b>${p.nombre} ${p.apellido || ''}</b></td>
+              <td>${p.telefono || 'N/A'}</td>
+              <td>${p.email || 'N/A'}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('${p.cedula}')"><i class="bi bi-file-medical"></i> Historia</button>
+              </td>
+            </tr>`;
+        });
+      } catch (err) {
+        console.error("Error al cargar pacientes:", err);
       }
-      renderizarPacientes();
     }
 
-    function renderizarPacientes() {
-      const lista = JSON.parse(localStorage.getItem('pacientes_lista')) || [];
-      const tbody = document.getElementById('tablaPacientes');
-      tbody.innerHTML = '';
-
-      lista.forEach(p => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${p.cedula}</td>
-          <td><b>${p.nombre}</b></td>
-          <td>${p.telefono}</td>
-          <td>${p.email}</td>
-          <td>
-            <button class="btn btn-sm btn-outline-primary me-1" onclick="abrirHistoria('${p.cedula}', '${p.nombre}')">
-              <i class="bi bi-file-earmark-medical"></i> Historia
-            </button>
-            <button class="btn btn-sm btn-outline-success" onclick="abrirSeguimiento('${p.cedula}')">
-              <i class="bi bi-activity"></i> Citas / Pagos
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function guardarNuevoPaciente(e) {
+    // CREAR PACIENTE EN LA BASE DE DATOS VIA RUTA POST /api/pacientes
+    async function guardarNuevoPaciente(e) {
       e.preventDefault();
-      const nuevo = {
+      const nuevoPaciente = {
         cedula: document.getElementById('nuevoCedula').value.trim(),
         nombre: document.getElementById('nuevoNombre').value.trim(),
+        apellido: document.getElementById('nuevoApellido').value.trim(),
+        fecha_nacimiento: document.getElementById('nuevoNacimiento').value || null,
         telefono: document.getElementById('nuevoTelefono').value.trim(),
-        email: document.getElementById('nuevoEmail').value.trim()
-      };
-
-      const lista = JSON.parse(localStorage.getItem('pacientes_lista')) || [];
-      lista.push(nuevo);
-      localStorage.setItem('pacientes_lista', JSON.stringify(lista));
-
-      renderizarPacientes();
-      document.getElementById('formNuevoPaciente').reset();
-      bootstrap.Modal.getInstance(document.getElementById('modalNuevoPaciente')).hide();
-    }
-
-    function cargarAgendaGlobal() {
-      const pacientes = JSON.parse(localStorage.getItem('pacientes_lista')) || [];
-      let todasCitas = [];
-      let totalRecaudado = 0;
-      let citasPendientes = 0;
-
-      pacientes.forEach(p => {
-        const segs = JSON.parse(localStorage.getItem('seguimientos_' + p.cedula)) || [];
-        segs.forEach(s => {
-          todasCitas.push({ ...s, pacienteNombre: p.nombre, cedula: p.cedula });
-          totalRecaudado += parseFloat(s.pago || 0);
-          if (s.asistencia === 'Pendiente' || s.asistencia === 'Reprogramada') {
-            citasPendientes++;
-          }
-        });
-      });
-
-      document.getElementById('statTotalRecaudado').innerText = `$${totalRecaudado.toFixed(2)}`;
-      document.getElementById('statCitasPendientes').innerText = citasPendientes;
-      window.todasCitasCache = todasCitas;
-      filtrarAgendaGlobal();
-    }
-
-    function filtrarAgendaGlobal() {
-      const fechaFiltro = document.getElementById('filtroFechaAgenda').value;
-      const estadoFiltro = document.getElementById('filtroEstadoAgenda').value;
-      const tbody = document.getElementById('tablaGlobalAgenda');
-      tbody.innerHTML = '';
-
-      let resultado = window.todasCitasCache || [];
-      if(fechaFiltro) resultado = resultado.filter(c => c.fecha && c.fecha.startsWith(fechaFiltro));
-      if(estadoFiltro !== 'TODOS') resultado = resultado.filter(c => c.asistencia === estadoFiltro);
-
-      if(resultado.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No hay registros con los filtros seleccionados</td></tr>';
-        return;
-      }
-
-      resultado.forEach(c => {
-        const badgeClass = c.asistencia === 'Asistió' ? 'bg-success' : (c.asistencia === 'Cancelada' ? 'bg-danger' : 'bg-warning');
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><b>${c.fecha ? c.fecha.replace('T', ' ') : 'S/F'}</b></td>
-          <td>${c.pacienteNombre}</td>
-          <td><span class="badge ${badgeClass}">${c.asistencia}</span></td>
-          <td>${c.evolucion || 'Sin nota'}</td>
-          <td class="fw-bold text-success">$${parseFloat(c.pago || 0).toFixed(2)}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function limpiarFiltrosAgenda() {
-      document.getElementById('filtroFechaAgenda').value = '';
-      document.getElementById('filtroEstadoAgenda').value = 'TODOS';
-      filtrarAgendaGlobal();
-    }
-
-    function abrirHistoria(cedula, nombre) {
-      document.getElementById('formHistoriaClinica').reset();
-      document.getElementById('hcFechaApertura').valueAsDate = new Date();
-      document.getElementById('hcCedula').value = cedula;
-      document.getElementById('hcNombre').value = nombre;
-      
-      editarHistoria(cedula);
-      cargarVistaHistorias(cedula);
-      
-      const modal = new bootstrap.Modal(document.getElementById('modalHistoriaClinica'));
-      modal.show();
-    }
-
-    function editarHistoria(cedula) {
-      const datosGuardados = localStorage.getItem('historia_' + cedula);
-      if (datosGuardados) {
-        const hc = JSON.parse(datosGuardados);
-        document.getElementById('hcFechaApertura').value = hc.fechaApertura || '';
-        document.getElementById('hcFechaNacimiento').value = hc.fechaNacimiento || '';
-        document.getElementById('hcEdad').value = hc.edad || '';
-        document.getElementById('hcGenero').value = hc.genero || 'Masculino';
-        document.getElementById('hcOcupacion').value = hc.ocupacion || '';
-        document.getElementById('hcMedico').value = hc.medico || '';
-        document.getElementById('hcDiagMedico').value = hc.diagMedico || '';
-        document.getElementById('hcMotivo').value = hc.motivo || '';
-        
-        document.getElementById('hcEnfermedadesPrevias').value = hc.enfermedadesPrevias || '';
-        document.getElementById('hcQuirurgicas').value = hc.quirurgicas || '';
-        document.getElementById('hcMedicamentos').value = hc.medicamentos || '';
-        document.getElementById('hcAlergias').value = hc.alergias || '';
-        document.getElementById('hcAntecedentesFam').value = hc.antecedentesFam || '';
-        
-        document.getElementById('hcSintomas').value = hc.sintomas || '';
-        document.getElementById('hcRangoDolor').value = hc.dolor || 5;
-        document.getElementById('evaValor').innerText = hc.dolor || 5;
-        document.getElementById('hcAyudasTecnicas').value = hc.ayudasTecnicas || '';
-        
-        document.getElementById('hcTono').value = hc.tono || '';
-        document.getElementById('hcReflejos').value = hc.reflejos || '';
-        document.getElementById('hcSensibilidad').value = hc.sensibilidad || '';
-        document.getElementById('hcCoordinacion').value = hc.coordinacion || '';
-        document.getElementById('hcEquilibrio').value = hc.equilibrio || '';
-        document.getElementById('hcEscalasEspec').value = hc.escalasEspec || '';
-        
-        document.getElementById('hcDiagFisio').value = hc.diagFisio || '';
-        document.getElementById('hcTratamiento').value = hc.tratamiento || '';
-        document.getElementById('hcEjerciciosCasa').value = hc.ejerciciosCasa || '';
-
-        if (hc.goniometria) {
-          Object.keys(hc.goniometria).forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.value = hc.goniometria[id];
-          });
-        }
-
-        if (hc.evalMuscular) {
-          Object.keys(hc.evalMuscular).forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.value = hc.evalMuscular[id];
-          });
-        }
-      }
-    }
-
-    function imprimirHistoria() {
-      const regTab = new bootstrap.Tab(document.getElementById('btn-tab-registros'));
-      regTab.show();
-      setTimeout(() => { window.print(); }, 300);
-    }
-
-    function exportarPDF() {
-      const regTab = new bootstrap.Tab(document.getElementById('btn-tab-registros'));
-      regTab.show();
-
-      setTimeout(() => {
-        const elemento = document.getElementById('contenedorHistorias');
-        const cedula = document.getElementById('hcCedula').value;
-        const opt = {
-          margin:       0.5,
-          filename:     `Historia_Clinica_${cedula}.pdf`,
-          image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 2 },
-          jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(elemento).save();
-      }, 300);
-    }
-
-    document.getElementById('formHistoriaClinica').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const cedula = document.getElementById('hcCedula').value;
-      
-      const goniometriaData = {};
-      document.querySelectorAll('#tab-goniometria input[type="text"]').forEach(input => {
-        if(input.id) goniometriaData[input.id] = input.value;
-      });
-
-      const muscularData = {};
-      document.querySelectorAll('#tablaEvalMuscular input[type="text"]').forEach(input => {
-        if(input.id) muscularData[input.id] = input.value;
-      });
-
-      const datosHistoria = {
-        fechaApertura: document.getElementById('hcFechaApertura').value,
-        fechaNacimiento: document.getElementById('hcFechaNacimiento').value,
-        edad: document.getElementById('hcEdad').value,
-        genero: document.getElementById('hcGenero').value,
-        ocupacion: document.getElementById('hcOcupacion').value,
-        medico: document.getElementById('hcMedico').value,
-        diagMedico: document.getElementById('hcDiagMedico').value,
-        motivo: document.getElementById('hcMotivo').value,
-        enfermedadesPrevias: document.getElementById('hcEnfermedadesPrevias').value,
-        quirurgicas: document.getElementById('hcQuirurgicas').value,
-        medicamentos: document.getElementById('hcMedicamentos').value,
-        alergias: document.getElementById('hcAlergias').value,
-        antecedentesFam: document.getElementById('hcAntecedentesFam').value,
-        sintomas: document.getElementById('hcSintomas').value,
-        dolor: document.getElementById('hcRangoDolor').value,
-        ayudasTecnicas: document.getElementById('hcAyudasTecnicas').value,
-        tono: document.getElementById('hcTono').value,
-        reflejos: document.getElementById('hcReflejos').value,
-        sensibilidad: document.getElementById('hcSensibilidad').value,
-        coordinacion: document.getElementById('hcCoordinacion').value,
-        equilibrio: document.getElementById('hcEquilibrio').value,
-        escalasEspec: document.getElementById('hcEscalasEspec').value,
-        diagFisio: document.getElementById('hcDiagFisio').value,
-        tratamiento: document.getElementById('hcTratamiento').value,
-        ejerciciosCasa: document.getElementById('hcEjerciciosCasa').value,
-        goniometria: goniometriaData,
-        evalMuscular: muscularData
+        email: document.getElementById('nuevoEmail').value.trim(),
+        direccion: document.getElementById('nuevoDireccion').value.trim()
       };
 
       try {
-        localStorage.setItem('historia_' + cedula, JSON.stringify(datosHistoria));
-        alert('¡Historia clínica guardada con éxito!');
-        cargarVistaHistorias(cedula);
-        
-        const modalElement = document.getElementById('modalHistoriaClinica');
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        modal.hide();
-      } catch (error) {
-        alert('Error: Exceso de tamaño de datos. Intenta guardar sin archivos pesados.');
+        const response = await fetch('/api/pacientes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(nuevoPaciente)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          alert('Error al guardar: ' + (data.error || 'Desconocido'));
+          return;
+        }
+
+        document.getElementById('formNuevoPaciente').reset();
+        bootstrap.Modal.getInstance(document.getElementById('modalNuevoPaciente')).hide();
+        cargarPacientesDB();
+        alert('¡Paciente registrado exitosamente en la Base de Datos y Supabase!');
+      } catch (err) {
+        console.error(err);
+        alert('Error de conexión al guardar el paciente.');
       }
-    });
-
-    function cargarVistaHistorias(cedula) {
-      const datosGuardados = localStorage.getItem('historia_' + cedula);
-      const contenedor = document.getElementById('contenedorHistorias');
-
-      if (!datosGuardados) {
-        contenedor.innerHTML = '<div class="alert alert-info text-center">No hay registros de Historia Clínica guardados para este paciente.</div>';
-        return;
-      }
-
-      const hc = JSON.parse(datosGuardados);
-
-      contenedor.innerHTML = `
-        <div class="card border-primary p-4 bg-white shadow-sm">
-          <div class="border-bottom pb-3 mb-3 text-center">
-            <h4 class="fw-bold text-primary mb-1">HISTORIA CLÍNICA DE FISIOTERAPIA</h4>
-            <p class="text-muted mb-0">Fecha de Apertura: ${hc.fechaApertura || 'N/A'}</p>
-          </div>
-
-          <h5 class="text-secondary border-bottom pb-2">1. Datos Personales</h5>
-          <div class="row g-2 mb-3">
-            <div class="col-md-4"><b>Cédula:</b> ${cedula}</div>
-            <div class="col-md-4"><b>Fecha Nacimiento:</b> ${hc.fechaNacimiento || 'N/A'}</div>
-            <div class="col-md-4"><b>Edad:</b> ${hc.edad || 'N/A'} años</div>
-            <div class="col-md-4"><b>Género:</b> ${hc.genero || 'N/A'}</div>
-            <div class="col-md-4"><b>Ocupación:</b> ${hc.ocupacion || 'N/A'}</div>
-            <div class="col-md-4"><b>Médico:</b> ${hc.medico || 'N/A'}</div>
-            <div class="col-12"><b>Diag. Médico:</b> ${hc.diagMedico || 'N/A'}</div>
-            <div class="col-12"><b>Motivo de Consulta:</b> ${hc.motivo || 'N/A'}</div>
-          </div>
-
-          <h5 class="text-secondary border-bottom pb-2">2. Antecedentes</h5>
-          <div class="row g-2 mb-3">
-            <div class="col-md-6"><b>Previas:</b> ${hc.enfermedadesPrevias || 'Sin datos'}</div>
-            <div class="col-md-6"><b>Quirúrgicas:</b> ${hc.quirurgicas || 'Sin datos'}</div>
-            <div class="col-md-4"><b>Medicamentos:</b> ${hc.medicamentos || 'Sin datos'}</div>
-            <div class="col-md-4"><b>Alergias:</b> ${hc.alergias || 'Sin datos'}</div>
-            <div class="col-md-4"><b>Familiares:</b> ${hc.antecedentesFam || 'Sin datos'}</div>
-          </div>
-
-          <h5 class="text-secondary border-bottom pb-2">3. Examen Físico y Evaluación</h5>
-          <div class="row g-2 mb-3">
-            <div class="col-md-8"><b>Síntomas:</b> ${hc.sintomas || 'N/A'}</div>
-            <div class="col-md-4"><b>Nivel Dolor (EVA):</b> <span class="badge bg-danger">${hc.dolor || '0'}/10</span></div>
-            <div class="col-md-4"><b>Tono:</b> ${hc.tono || 'N/A'}</div>
-            <div class="col-md-4"><b>Reflejos:</b> ${hc.reflejos || 'N/A'}</div>
-            <div class="col-md-4"><b>Sensibilidad:</b> ${hc.sensibilidad || 'N/A'}</div>
-            <div class="col-md-4"><b>Coordinación:</b> ${hc.coordinacion || 'N/A'}</div>
-            <div class="col-md-4"><b>Equilibrio:</b> ${hc.equilibrio || 'N/A'}</div>
-          </div>
-
-          <h5 class="text-secondary border-bottom pb-2">4. Diagnóstico y Plan</h5>
-          <div class="mb-2"><b>Diag. Fisioterapéutico:</b> ${hc.diagFisio || 'N/A'}</div>
-          <div class="mb-2"><b>Tratamiento:</b> ${hc.tratamiento || 'N/A'}</div>
-          <div><b>Ejercicios en Casa:</b> ${hc.ejerciciosCasa || 'N/A'}</div>
-        </div>
-      `;
     }
 
-    function abrirSeguimiento(cedula) {
-      cancelarEdicionSeguimiento();
-      document.getElementById('segCedulaPaciente').value = cedula;
-      renderizarTablaSeguimientos(cedula);
-      const modal = new bootstrap.Modal(document.getElementById('modalSeguimiento'));
-      modal.show();
+    function abrirHistoria(cedula) {
+      document.getElementById('hcCedula').value = cedula;
+      document.getElementById('formHistoriaClinica').reset();
+      const datos = localStorage.getItem('historia_' + cedula);
+      document.getElementById('contenedorHistorias').innerHTML = datos ? `<div class="alert alert-secondary">${datos}</div>` : 'Sin historia previa local.';
+      new bootstrap.Modal(document.getElementById('modalHistoriaClinica')).show();
     }
 
-    function renderizarTablaSeguimientos(cedula) {
-      const tbody = document.getElementById('listaSeguimientos');
-      tbody.innerHTML = '';
-
-      const registrosGuardados = localStorage.getItem('seguimientos_' + cedula);
-      const seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
-
-      if (seguimientos.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin registros de seguimiento aún</td></tr>';
-        return;
-      }
-
-      seguimientos.forEach((sesion, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${sesion.fecha ? sesion.fecha.replace('T', ' ') : 'S/F'}</td>
-          <td><span class="badge ${sesion.asistencia === 'Asistió' ? 'bg-success' : (sesion.asistencia === 'Cancelada' ? 'bg-danger' : 'bg-warning')}">${sesion.asistencia}</span></td>
-          <td>${sesion.evolucion || 'Sin notas'}</td>
-          <td class="fw-bold text-success">$${parseFloat(sesion.pago || 0).toFixed(2)}</td>
-          <td class="text-center">
-            <button class="btn btn-sm btn-outline-primary" onclick="cargarSeguimientoParaEditar(${index})">
-              <i class="bi bi-pencil"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function cargarSeguimientoParaEditar(index) {
-      const cedula = document.getElementById('segCedulaPaciente').value;
-      const seguimientos = JSON.parse(localStorage.getItem('seguimientos_' + cedula));
-      const sesion = seguimientos[index];
-
-      document.getElementById('segIndexEditar').value = index;
-      document.getElementById('segFecha').value = sesion.fecha;
-      document.getElementById('segAsistencia').value = sesion.asistencia;
-      document.getElementById('segPago').value = sesion.pago;
-      document.getElementById('segEvolucion').value = sesion.evolucion;
-
-      document.getElementById('tituloFormSeguimiento').innerText = 'Editar Registro de Sesión';
-      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-check-circle me-1"></i> Actualizar Registro';
-      document.getElementById('btnGuardarSeg').className = 'btn btn-sm btn-warning';
-      document.getElementById('btnCancelarEditSeg').classList.remove('d-none');
-    }
-
-    function cancelarEdicionSeguimiento() {
-      document.getElementById('formSeguimiento').reset();
-      document.getElementById('segIndexEditar').value = "-1";
-      document.getElementById('tituloFormSeguimiento').innerText = 'Registrar Nueva Sesión / Agendamiento';
-      document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-plus-circle me-1"></i> Guardar Registro';
-      document.getElementById('btnGuardarSeg拱.className = 'btn btn-sm btn-success';
-      document.getElementById('btnCancelarEditSeg').classList.add('d-none');
-    }
-
-    function enviarRecordatorioSMS() {
-      const fecha = document.getElementById('segFecha').value;
-      if (!fecha) {
-        alert('Por favor selecciona una fecha y hora para la cita.');
-        return;
-      }
-      alert('📱 Recordatorio SMS enviado con éxito al paciente para la fecha: ' + fecha.replace('T', ' '));
-    }
-
-    document.getElementById('formSeguimiento').addEventListener('submit', function(e) {
+    function guardarHistoria(e) {
       e.preventDefault();
-
-      const cedula = document.getElementById('segCedulaPaciente').value;
-      const index = parseInt(document.getElementById('segIndexEditar').value);
-      
-      const sesionData = {
-        fecha: document.getElementById('segFecha').value,
-        asistencia: document.getElementById('segAsistencia').value,
-        pago: document.getElementById('segPago').value || 0,
-        evolucion: document.getElementById('segEvolucion').value
-      };
-
-      const registrosGuardados = localStorage.getItem('seguimientos_' + cedula);
-      let seguimientos = registrosGuardados ? JSON.parse(registrosGuardados) : [];
-
-      if (index >= 0) {
-        seguimientos[index] = sesionData;
-        alert('¡Registro actualizado exitosamente!');
-      } else {
-        seguimientos.push(sesionData);
-        alert('¡Registro y agendamiento guardados exitosamente!');
-      }
-
-      localStorage.setItem('seguimientos_' + cedula, JSON.stringify(seguimientos));
-
-      cancelarEdicionSeguimiento();
-      renderizarTablaSeguimientos(cedula);
-    });
+      const cedula = document.getElementById('hcCedula').value;
+      const texto = `Diag: ${document.getElementById('hcDiag').value} | Tratamiento: ${document.getElementById('hcTratamiento').value}`;
+      localStorage.setItem('historia_' + cedula, texto);
+      alert('Historia clínica guardada localmente.');
+      bootstrap.Modal.getInstance(document.getElementById('modalHistoriaClinica')).hide();
+    }
 
     function cerrarSesion() {
       localStorage.removeItem('usuarioSesion');
