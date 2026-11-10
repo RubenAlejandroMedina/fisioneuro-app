@@ -18,6 +18,7 @@
     .sidebar .nav-link { color: #94a3b8; padding: 12px 20px; margin: 4px 0; border-radius: 8px; font-weight: 500; transition: all 0.2s; cursor: pointer; }
     .sidebar .nav-link.active, .sidebar .nav-link:hover { background: var(--primary-color); color: white; }
     .custom-card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); background: white; }
+    .table-eval input, .table-gon input { width: 70px; text-align: center; }
     @media print {
       body * { visibility: hidden; }
       #contenedorHistorias, #contenedorHistorias * { visibility: visible; }
@@ -155,12 +156,12 @@
     </div>
   </div>
 
-  <!-- MODAL: HISTORIA CLÍNICA INTEGRAL (COMPLETA + PDF) -->
+  <!-- MODAL: HISTORIA CLÍNICA INTEGRAL OFICIAL -->
   <div class="modal fade" id="modalHistoriaClinica" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header bg-primary text-white d-flex justify-content-between align-items-center">
-          <h5 class="modal-title"><i class="bi bi-journal-medical me-2"></i>Historia Clínica Integrada</h5>
+          <h5 class="modal-title"><i class="bi bi-journal-medical me-2"></i>Historia Clínica de Fisioterapia</h5>
           <div>
             <button class="btn btn-sm btn-light me-2" onclick="imprimirHistoria()"><i class="bi bi-printer me-1"></i> Imprimir</button>
             <button class="btn btn-sm btn-outline-light me-3" onclick="exportarPDF()"><i class="bi bi-file-earmark-pdf me-1"></i> PDF</button>
@@ -179,14 +180,14 @@
               <form id="formHistoriaClinica">
                 <div class="accordion" id="accordionHistoria">
                   
-                  <!-- 1. DATOS GENERALES Y ADJUNTO PDF -->
+                  <!-- 1. DATOS DEL PACIENTE -->
                   <div class="accordion-item">
                     <h2 class="accordion-header">
-                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#secGeneral">
-                        1. Datos Generales y Archivo PDF Adjunto
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#secDatos">
+                        1. Datos del Paciente y Diagnóstico Médico
                       </button>
                     </h2>
-                    <div id="secGeneral" class="accordion-collapse collapse show">
+                    <div id="secDatos" class="accordion-collapse collapse show">
                       <div class="accordion-body">
                         <div class="row g-3">
                           <div class="col-md-3"><label class="form-label fw-bold">Fecha Apertura</label><input type="date" id="hcFechaApertura" class="form-control" required></div>
@@ -202,16 +203,11 @@
                               <option value="Otro">Otro</option>
                             </select>
                           </div>
+                          <div class="col-md-4"><label class="form-label fw-bold">Celular</label><input type="text" id="hcCelular" class="form-control"></div>
                           <div class="col-md-4"><label class="form-label fw-bold">Ocupación</label><input type="text" id="hcOcupacion" class="form-control"></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Médico Tratante</label><input type="text" id="hcMedico" class="form-control"></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Diagnóstico Médico</label><input type="text" id="hcDiagMedico" class="form-control"></div>
+                          <div class="col-md-4"><label class="form-label fw-bold">Médico Tratante</label><input type="text" id="hcMedico" class="form-control"></div>
+                          <div class="col-12"><label class="form-label fw-bold">Diagnóstico Médico</label><input type="text" id="hcDiagMedico" class="form-control"></div>
                           <div class="col-12"><label class="form-label fw-bold">Motivo de Consulta</label><textarea id="hcMotivo" class="form-control" rows="2"></textarea></div>
-                          
-                          <!-- SECCIÓN SUBIR PDF -->
-                          <div class="col-12 bg-light p-3 rounded border">
-                            <label class="form-label fw-bold text-primary"><i class="bi bi-file-earmark-pdf me-1"></i> Adjuntar Examen, Receta o Radiografía (PDF)</label>
-                            <input type="file" id="hcArchivoPdf" class="form-control" accept="application/pdf">
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -221,77 +217,252 @@
                   <div class="accordion-item">
                     <h2 class="accordion-header">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secAntecedentes">
-                        2. Antecedentes Mórbidos y Personales
+                        2. Antecedentes (Personales y Familiares)
                       </button>
                     </h2>
                     <div id="secAntecedentes" class="accordion-collapse collapse">
                       <div class="accordion-body">
+                        <h6 class="text-primary fw-bold">Personales</h6>
+                        <div class="row g-3 mb-3">
+                          <div class="col-md-6"><label class="form-label fw-bold">Enfermedades Previas Relevantes</label><textarea id="hcEnfermedadesPrevias" class="form-control" rows="2"></textarea></div>
+                          <div class="col-md-6"><label class="form-label fw-bold">Intervenciones Quirúrgicas</label><textarea id="hcQuirurgicas" class="form-control" rows="2"></textarea></div>
+                          <div class="col-md-6"><label class="form-label fw-bold">Medicamentos Actuales</label><textarea id="hcMedicamentos" class="form-control" rows="2"></textarea></div>
+                          <div class="col-md-6"><label class="form-label fw-bold">Alergias</label><textarea id="hcAlergias" class="form-control" rows="2"></textarea></div>
+                        </div>
+                        <h6 class="text-primary fw-bold">Familiares</h6>
                         <div class="row g-3">
-                          <div class="col-md-6"><label class="form-label fw-bold">Enfermedades Previas</label><textarea id="hcEnfermedadesPrevias" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Quirúrgicas / Traumatismos</label><textarea id="hcQuirurgicas" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Medicamentos Actuales</label><textarea id="hcMedicamentos" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Alergias</label><textarea id="hcAlergias" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Antecedentes Familiares</label><textarea id="hcAntecedentesFam" class="form-control" rows="2"></textarea></div>
+                          <div class="col-12"><label class="form-label fw-bold">Antecedentes Familiares</label><textarea id="hcAntecedentesFam" class="form-control" rows="2"></textarea></div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- 3. SÍNTOMAS Y EVA -->
+                  <!-- 3. HISTORIA DE LA ENFERMEDAD ACTUAL -->
                   <div class="accordion-item">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secSintomas">
-                        3. Síntomas Actuales y Escala Analógica del Dolor (EVA)
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secEnfermedadActual">
+                        3. Historia de la Enfermedad Actual (Síntomas, EVA, Imágenes y Ayudas)
                       </button>
                     </h2>
-                    <div id="secSintomas" class="accordion-collapse collapse">
+                    <div id="secEnfermedadActual" class="accordion-collapse collapse">
                       <div class="accordion-body">
                         <div class="row g-3">
-                          <div class="col-md-8"><label class="form-label fw-bold">Descripción de Síntomas</label><textarea id="hcSintomas" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-4">
-                            <label class="form-label fw-bold">Nivel de Dolor (EVA: <span id="evaValor" class="text-danger fw-bold">5</span>/10)</label>
+                          <div class="col-12"><label class="form-label fw-bold">Síntomas</label><textarea id="hcSintomas" class="form-control" rows="2"></textarea></div>
+                          
+                          <div class="col-md-12">
+                            <label class="form-label fw-bold">Evaluación del Dolor (Escala EVA: <span id="evaValor" class="text-danger fw-bold">5</span>/10)</label>
                             <input type="range" class="form-range" min="0" max="10" value="5" id="hcRangoDolor" oninput="document.getElementById('evaValor').innerText = this.value">
                           </div>
-                          <div class="col-12"><label class="form-label fw-bold">Ayudas Técnicas / Órtesis</label><input type="text" id="hcAyudasTecnicas" class="form-control"></div>
+
+                          <div class="col-12">
+                            <label class="form-label fw-bold text-primary"><i class="bi bi-file-earmark-pdf me-1"></i> Imágenes Diagnósticas / Exámenes (PDF o Imagen)</label>
+                            <input type="file" id="hcArchivoPdf" class="form-control" accept="application/pdf,image/*">
+                          </div>
+
+                          <div class="col-12"><label class="form-label fw-bold">Ayudas Técnicas</label><input type="text" id="hcAyudasTecnicas" class="form-control" placeholder="Ej. Bastón, silla de ruedas, órtesis..."></div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- 4. EXAMEN NEUROMUSCULAR -->
+                  <!-- 4. EVALUACIÓN FÍSICA (BALANCE MUSCULAR) -->
                   <div class="accordion-item">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secNeuromuscular">
-                        4. Examen Físico y Neuromuscular
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secEvalMuscular">
+                        4. Evaluación Física - Balance Muscular (Daniels 0-5)
                       </button>
                     </h2>
-                    <div id="secNeuromuscular" class="accordion-collapse collapse">
+                    <div id="secEvalMuscular" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        <div class="table-responsive">
+                          <table class="table table-sm table-bordered text-center align-middle table-eval">
+                            <thead class="table-light">
+                              <tr>
+                                <th rowspan="2">Segmento Corporal</th>
+                                <th colspan="2">Inicial</th>
+                                <th colspan="2">Final</th>
+                              </tr>
+                              <tr>
+                                <th>D</th><th>I</th><th>D</th><th>I</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr><td colspan="5" class="bg-secondary text-white text-start fw-bold">MIEMBRO SUPERIOR</td></tr>
+                              <tr><td>Fx de hombro</td><td><input type="text" id="musc_hombro_fx_d_ini"></td><td><input type="text" id="musc_hombro_fx_i_ini"></td><td><input type="text" id="musc_hombro_fx_d_fin"></td><td><input type="text" id="musc_hombro_fx_i_fin"></td></tr>
+                              <tr><td>Ex de hombro</td><td><input type="text" id="musc_hombro_ex_d_ini"></td><td><input type="text" id="musc_hombro_ex_i_ini"></td><td><input type="text" id="musc_hombro_ex_d_fin"></td><td><input type="text" id="musc_hombro_ex_i_fin"></td></tr>
+                              <tr><td>Abd de hombro</td><td><input type="text" id="musc_hombro_abd_d_ini"></td><td><input type="text" id="musc_hombro_abd_i_ini"></td><td><input type="text" id="musc_hombro_abd_d_fin"></td><td><input type="text" id="musc_hombro_abd_i_fin"></td></tr>
+                              <tr><td>Add de hombro</td><td><input type="text" id="musc_hombro_add_d_ini"></td><td><input type="text" id="musc_hombro_add_i_ini"></td><td><input type="text" id="musc_hombro_add_d_fin"></td><td><input type="text" id="musc_hombro_add_i_fin"></td></tr>
+                              <tr><td>Fx de codo</td><td><input type="text" id="musc_codo_fx_d_ini"></td><td><input type="text" id="musc_codo_fx_i_ini"></td><td><input type="text" id="musc_codo_fx_d_fin"></td><td><input type="text" id="musc_codo_fx_i_fin"></td></tr>
+                              <tr><td>Ex de codo</td><td><input type="text" id="musc_codo_ex_d_ini"></td><td><input type="text" id="musc_codo_ex_i_ini"></td><td><input type="text" id="musc_codo_ex_d_fin"></td><td><input type="text" id="musc_codo_ex_i_fin"></td></tr>
+                              <tr><td>Fx de muñeca</td><td><input type="text" id="musc_muneca_fx_d_ini"></td><td><input type="text" id="musc_muneca_fx_i_ini"></td><td><input type="text" id="musc_muneca_fx_d_fin"></td><td><input type="text" id="musc_muneca_fx_i_fin"></td></tr>
+                              <tr><td>Ex de muñeca</td><td><input type="text" id="musc_muneca_ex_d_ini"></td><td><input type="text" id="musc_muneca_ex_i_ini"></td><td><input type="text" id="musc_muneca_ex_d_fin"></td><td><input type="text" id="musc_muneca_ex_i_fin"></td></tr>
+                              
+                              <tr><td colspan="5" class="bg-secondary text-white text-start fw-bold">MIEMBRO INFERIOR</td></tr>
+                              <tr><td>Fx de cadera</td><td><input type="text" id="musc_cadera_fx_d_ini"></td><td><input type="text" id="musc_cadera_fx_i_ini"></td><td><input type="text" id="musc_cadera_fx_d_fin"></td><td><input type="text" id="musc_cadera_fx_i_fin"></td></tr>
+                              <tr><td>Ex de cadera</td><td><input type="text" id="musc_cadera_ex_d_ini"></td><td><input type="text" id="musc_cadera_ex_i_ini"></td><td><input type="text" id="musc_cadera_ex_d_fin"></td><td><input type="text" id="musc_cadera_ex_i_fin"></td></tr>
+                              <tr><td>Abd de cadera</td><td><input type="text" id="musc_cadera_abd_d_ini"></td><td><input type="text" id="musc_cadera_abd_i_ini"></td><td><input type="text" id="musc_cadera_abd_d_fin"></td><td><input type="text" id="musc_cadera_abd_i_fin"></td></tr>
+                              <tr><td>Add de cadera</td><td><input type="text" id="musc_cadera_add_d_ini"></td><td><input type="text" id="musc_cadera_add_i_ini"></td><td><input type="text" id="musc_cadera_add_d_fin"></td><td><input type="text" id="musc_cadera_add_i_fin"></td></tr>
+                              <tr><td>Fx de rodilla</td><td><input type="text" id="musc_rodilla_fx_d_ini"></td><td><input type="text" id="musc_rodilla_fx_i_ini"></td><td><input type="text" id="musc_rodilla_fx_d_fin"></td><td><input type="text" id="musc_rodilla_fx_i_fin"></td></tr>
+                              <tr><td>Ex de rodilla</td><td><input type="text" id="musc_rodilla_ex_d_ini"></td><td><input type="text" id="musc_rodilla_ex_i_ini"></td><td><input type="text" id="musc_rodilla_ex_d_fin"></td><td><input type="text" id="musc_rodilla_ex_i_fin"></td></tr>
+                              <tr><td>Fx de tobillo</td><td><input type="text" id="musc_tobillo_fx_d_ini"></td><td><input type="text" id="musc_tobillo_fx_i_ini"></td><td><input type="text" id="musc_tobillo_fx_d_fin"></td><td><input type="text" id="musc_tobillo_fx_i_fin"></td></tr>
+                              <tr><td>Ex de tobillo</td><td><input type="text" id="musc_tobillo_ex_d_ini"></td><td><input type="text" id="musc_tobillo_ex_i_ini"></td><td><input type="text" id="musc_tobillo_ex_d_fin"></td><td><input type="text" id="musc_tobillo_ex_i_fin"></td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 5. GONIOMETRÍA -->
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secGoniometria">
+                        5. Goniometría (Columna, Hombro, Codo, Muñeca, Cadera, Rodilla, Tobillo)
+                      </button>
+                    </h2>
+                    <div id="secGoniometria" class="accordion-collapse collapse">
+                      <div class="accordion-body">
+                        <!-- Columna Cervical -->
+                        <h6 class="text-primary fw-bold">Columna Cervical</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0º - 45º</td><td><input type="text" id="gon_cerv_flex"></td></tr>
+                            <tr><td>Ext. 0º - 45º</td><td><input type="text" id="gon_cerv_ext"></td></tr>
+                            <tr><td>Rot. I. 0º - 60º</td><td><input type="text" id="gon_cerv_roti"></td></tr>
+                            <tr><td>Rot. D. 0º - 60º</td><td><input type="text" id="gon_cerv_rotd"></td></tr>
+                            <tr><td>Inc. I. 0º - 45º</td><td><input type="text" id="gon_cerv_inci"></td></tr>
+                            <tr><td>Inc. D. 0º - 45º</td><td><input type="text" id="gon_cerv_incd"></td></tr>
+                          </tbody>
+                        </table>
+
+                        <!-- Columna Lumbar -->
+                        <h6 class="text-primary fw-bold">Columna Lumbar</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0º - 80º</td><td><input type="text" id="gon_lumb_flex"></td></tr>
+                            <tr><td>Ext. 0º - 30º</td><td><input type="text" id="gon_lumb_ext"></td></tr>
+                            <tr><td>Rot. I. 0º - 45º</td><td><input type="text" id="gon_lumb_roti"></td></tr>
+                            <tr><td>Rot. D. 0º - 45º</td><td><input type="text" id="gon_lumb_rotd"></td></tr>
+                            <tr><td>Inc. I. 0º - 35º</td><td><input type="text" id="gon_lumb_inci"></td></tr>
+                            <tr><td>Inc. D. 0º - 35º</td><td><input type="text" id="gon_lumb_incd"></td></tr>
+                          </tbody>
+                        </table>
+
+                        <!-- Hombro -->
+                        <h6 class="text-primary fw-bold">Hombro</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0º - 180º</td><td><input type="text" id="gon_homb_flex"></td></tr>
+                            <tr><td>Ext. 0º - 60º</td><td><input type="text" id="gon_homb_ext"></td></tr>
+                            <tr><td>Abd. 0º - 180º</td><td><input type="text" id="gon_homb_abd"></td></tr>
+                            <tr><td>Ad. 0º</td><td><input type="text" id="gon_homb_add"></td></tr>
+                            <tr><td>Rot. I. 0º - 70º</td><td><input type="text" id="gon_homb_roti"></td></tr>
+                            <tr><td>Rot. E. 0º - 90º</td><td><input type="text" id="gon_homb_rote"></td></tr>
+                          </tbody>
+                        </table>
+
+                        <!-- Codo y Antebrazo -->
+                        <h6 class="text-primary fw-bold">Codo y Antebrazo</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0º - 150º</td><td><input type="text" id="gon_codo_flex"></td></tr>
+                            <tr><td>Ext. 0º</td><td><input type="text" id="gon_codo_ext"></td></tr>
+                            <tr><td>Pron. 0º - 80º</td><td><input type="text" id="gon_codo_pron"></td></tr>
+                            <tr><td>Sup. 0º - 80º</td><td><input type="text" id="gon_codo_sup"></td></tr>
+                          </tbody>
+                        </table>
+
+                        <!-- Muñeca -->
+                        <h6 class="text-primary fw-bold">Muñeca</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0º - 80º</td><td><input type="text" id="gon_mun_flex"></td></tr>
+                            <tr><td>Ext. 0º - 70º</td><td><input type="text" id="gon_mun_ext"></td></tr>
+                            <tr><td>Pron. 0º - 30º</td><td><input type="text" id="gon_mun_pron"></td></tr>
+                            <tr><td>Sup. 0º - 20º</td><td><input type="text" id="gon_mun_sup"></td></tr>
+                          </tbody>
+                        </table>
+
+                        <!-- Cadera -->
+                        <h6 class="text-primary fw-bold">Cadera</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A. Derecho</th><th>A.M.A. Izquierdo</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0º - 120º</td><td><input type="text" id="gon_cad_flex_d"></td><td><input type="text" id="gon_cad_flex_i"></td></tr>
+                            <tr><td>Ext. 0º - 30º</td><td><input type="text" id="gon_cad_ext_d"></td><td><input type="text" id="gon_cad_ext_i"></td></tr>
+                            <tr><td>Abd. 0º - 30º</td><td><input type="text" id="gon_cad_abd_d"></td><td><input type="text" id="gon_cad_abd_i"></td></tr>
+                            <tr><td>Ad. 0º - 45º</td><td><input type="text" id="gon_cad_add_d"></td><td><input type="text" id="gon_cad_add_i"></td></tr>
+                            <tr><td>Rot. I. 0º - 45º</td><td><input type="text" id="gon_cad_roti_d"></td><td><input type="text" id="gon_cad_roti_i"></td></tr>
+                            <tr><td>Rot. E. 0º - 45º</td><td><input type="text" id="gon_cad_rote_d"></td><td><input type="text" id="gon_cad_rote_i"></td></tr>
+                          </tbody>
+                        </table>
+
+                        <!-- Rodilla -->
+                        <h6 class="text-primary fw-bold">Rodilla</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A. Derecho</th><th>A.M.A. Izquierdo</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. 0º - 135º</td><td><input type="text" id="gon_rod_flex_d"></td><td><input type="text" id="gon_rod_flex_i"></td></tr>
+                            <tr><td>Ext. 0º - 10º</td><td><input type="text" id="gon_rod_ext_d"></td><td><input type="text" id="gon_rod_ext_i"></td></tr>
+                          </tbody>
+                        </table>
+
+                        <!-- Tobillo -->
+                        <h6 class="text-primary fw-bold">Tobillo</h6>
+                        <table class="table table-sm table-bordered text-center table-gon mb-3">
+                          <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A. Derecho</th><th>A.M.A. Izquierdo</th></tr></thead>
+                          <tbody>
+                            <tr><td>Flex. D 0º - 20º</td><td><input type="text" id="gon_tob_flexd_d"></td><td><input type="text" id="gon_tob_flexd_i"></td></tr>
+                            <tr><td>Flext. P 0º - 50º</td><td><input type="text" id="gon_tob_flexp_d"></td><td><input type="text" id="gon_tob_flexp_i"></td></tr>
+                            <tr><td>Inv. 0º - 35º</td><td><input type="text" id="gon_tob_inv_d"></td><td><input type="text" id="gon_tob_inv_i"></td></tr>
+                            <tr><td>Eve. 0º - 15º</td><td><input type="text" id="gon_tob_eve_d"></td><td><input type="text" id="gon_tob_eve_i"></td></tr>
+                          </tbody>
+                        </table>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 6. ASPECTOS NEUROLÓGICOS Y FUNCIONALES -->
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secNeurologico">
+                        6. Examen Neurológico y Funcional (Tono, Reflejos, Marcha, etc.)
+                      </button>
+                    </h2>
+                    <div id="secNeurologico" class="accordion-collapse collapse">
                       <div class="accordion-body">
                         <div class="row g-3">
-                          <div class="col-md-4"><label class="form-label fw-bold">Tono Muscular</label><input type="text" id="hcTono" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Reflejos Osteotendinosos</label><input type="text" id="hcReflejos" class="form-control"></div>
+                          <div class="col-md-4"><label class="form-label fw-bold">Tono</label><input type="text" id="hcTono" class="form-control"></div>
+                          <div class="col-md-4"><label class="form-label fw-bold">Reflejos</label><input type="text" id="hcReflejos" class="form-control"></div>
                           <div class="col-md-4"><label class="form-label fw-bold">Sensibilidad</label><input type="text" id="hcSensibilidad" class="form-control"></div>
                           <div class="col-md-4"><label class="form-label fw-bold">Coordinación</label><input type="text" id="hcCoordinacion" class="form-control"></div>
                           <div class="col-md-4"><label class="form-label fw-bold">Equilibrio</label><input type="text" id="hcEquilibrio" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Escalas Específicas</label><input type="text" id="hcEscalasEspec" class="form-control"></div>
+                          <div class="col-md-4"><label class="form-label fw-bold">Marcha</label><input type="text" id="hcMarcha" class="form-control" placeholder="Observaciones de marcha / video"></div>
+                          <div class="col-12"><label class="form-label fw-bold">Escalas Específicas</label><input type="text" id="hcEscalasEspec" class="form-control"></div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- 5. DIAGNÓSTICO Y PLAN -->
+                  <!-- 7. DIAGNÓSTICO, TRATAMIENTO Y EJERCICIOS EN CASA -->
                   <div class="accordion-item">
                     <h2 class="accordion-header">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secTratamiento">
-                        5. Diagnóstico Fisioterapéutico y Plan de Tratamiento
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secTratamientoOficial">
+                        7. Diagnóstico Fisioterapéutico, Tratamiento y Ejercicios en Casa
                       </button>
                     </h2>
-                    <div id="secTratamiento" class="accordion-collapse collapse">
+                    <div id="secTratamientoOficial" class="accordion-collapse collapse">
                       <div class="accordion-body">
                         <div class="row g-3">
                           <div class="col-12"><label class="form-label fw-bold">Diagnóstico Fisioterapéutico</label><textarea id="hcDiagFisio" class="form-control" rows="2"></textarea></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Plan de Tratamiento / Objetivos</label><textarea id="hcTratamiento" class="form-control" rows="3"></textarea></div>
-                          <div class="col-md-6"><label class="form-label fw-bold">Ejercicios para Casa</label><textarea id="hcEjerciciosCasa" class="form-control" rows="3"></textarea></div>
+                          <div class="col-md-6"><label class="form-label fw-bold">Tratamiento Aplicado</label><textarea id="hcTratamiento" class="form-control" rows="3"></textarea></div>
+                          <div class="col-md-6"><label class="form-label fw-bold">Ejercicios en Casa para el Paciente</label><textarea id="hcEjerciciosCasa" class="form-control" rows="3"></textarea></div>
                         </div>
                       </div>
                     </div>
@@ -341,8 +512,9 @@
                 </select>
               </div>
               <div class="col-md-4"><label class="form-label small">Monto Pagado ($)</label><input type="number" step="0.01" id="segPago" class="form-control form-control-sm" placeholder="0.00"></div>
-              <div class="col-12"><label class="form-label small">Evolución / Tratamiento</label><textarea id="segEvolucion" class="form-control form-control-sm" rows="2"></textarea></div>
+              <div class="col-12"><label class="form-label small">Evolución / Tratamiento Diario</label><textarea id="segEvolucion" class="form-control form-control-sm" rows="2"></textarea></div>
               <div class="col-12 text-end mt-2">
+                <button type="button" class="btn btn-sm btn-info text-white me-2" onclick="enviarRecordatorioSMS()"><i class="bi bi-chat-left-dots me-1"></i> SMS Recordatorio</button>
                 <button type="button" id="btnCancelarEditSeg" class="btn btn-sm btn-secondary d-none me-2" onclick="cancelarEdicionSeguimiento()">Cancelar</button>
                 <button type="submit" id="btnGuardarSeg" class="btn btn-sm btn-success"><i class="bi bi-plus-circle me-1"></i> Guardar Registro</button>
               </div>
@@ -479,6 +651,7 @@
           document.getElementById('hcFechaNacimiento').value = hc.fechaNacimiento || '';
           document.getElementById('hcEdad').value = hc.edad || '';
           document.getElementById('hcGenero').value = hc.genero || 'Masculino';
+          document.getElementById('hcCelular').value = hc.celular || '';
           document.getElementById('hcOcupacion').value = hc.ocupacion || '';
           document.getElementById('hcMedico').value = hc.medico || '';
           document.getElementById('hcDiagMedico').value = hc.diagMedico || '';
@@ -500,11 +673,26 @@
           document.getElementById('hcSensibilidad').value = hc.sensibilidad || '';
           document.getElementById('hcCoordinacion').value = hc.coordinacion || '';
           document.getElementById('hcEquilibrio').value = hc.equilibrio || '';
+          document.getElementById('hcMarcha').value = hc.marcha || '';
           document.getElementById('hcEscalasEspec').value = hc.escalasEspec || '';
           
           document.getElementById('hcDiagFisio').value = hc.diagFisio || '';
           document.getElementById('hcTratamiento').value = hc.tratamiento || '';
           document.getElementById('hcEjerciciosCasa').value = hc.ejerciciosCasa || '';
+
+          if(hc.goniometria) {
+            Object.keys(hc.goniometria).forEach(id => {
+              const el = document.getElementById(id);
+              if(el) el.value = hc.goniometria[id];
+            });
+          }
+
+          if(hc.evalMuscular) {
+            Object.keys(hc.evalMuscular).forEach(id => {
+              const el = document.getElementById(id);
+              if(el) el.value = hc.evalMuscular[id];
+            });
+          }
         } catch(e) {
           console.error("Error al leer historia:", e);
         }
@@ -516,12 +704,23 @@
       const cedula = document.getElementById('hcCedula').value;
       const archivoInput = document.getElementById('hcArchivoPdf');
 
+      const goniometriaData = {};
+      document.querySelectorAll('.table-gon input').forEach(input => {
+        if(input.id) goniometriaData[input.id] = input.value;
+      });
+
+      const muscularData = {};
+      document.querySelectorAll('.table-eval input').forEach(input => {
+        if(input.id) muscularData[input.id] = input.value;
+      });
+
       const guardarDatos = (pdfBase64 = null, pdfNombre = null) => {
         const datosHistoria = {
           fechaApertura: document.getElementById('hcFechaApertura').value,
           fechaNacimiento: document.getElementById('hcFechaNacimiento').value,
           edad: document.getElementById('hcEdad').value,
           genero: document.getElementById('hcGenero').value,
+          celular: document.getElementById('hcCelular').value,
           ocupacion: document.getElementById('hcOcupacion').value,
           medico: document.getElementById('hcMedico').value,
           diagMedico: document.getElementById('hcDiagMedico').value,
@@ -539,16 +738,19 @@
           sensibilidad: document.getElementById('hcSensibilidad').value,
           coordinacion: document.getElementById('hcCoordinacion').value,
           equilibrio: document.getElementById('hcEquilibrio').value,
+          marcha: document.getElementById('hcMarcha').value,
           escalasEspec: document.getElementById('hcEscalasEspec').value,
           diagFisio: document.getElementById('hcDiagFisio').value,
           tratamiento: document.getElementById('hcTratamiento').value,
           ejerciciosCasa: document.getElementById('hcEjerciciosCasa').value,
+          goniometria: goniometriaData,
+          evalMuscular: muscularData,
           pdfData: pdfBase64,
           pdfName: pdfNombre
         };
 
         localStorage.setItem('historia_' + cedula, JSON.stringify(datosHistoria));
-        alert('¡Historia clínica y archivo PDF guardados con éxito!');
+        alert('¡Historia clínica oficial guardada con éxito!');
         cargarVistaHistorias(cedula);
       };
 
@@ -575,12 +777,12 @@
 
       try {
         const hc = JSON.parse(datosGuardados);
-        let pdfHtml = '<p class="text-muted">Sin archivo PDF adjunto.</p>';
+        let pdfHtml = '<p class="text-muted">Sin archivos o imágenes adjuntas.</p>';
         if (hc.pdfData) {
           pdfHtml = `
             <div class="alert alert-light border d-flex justify-content-between align-items-center">
               <div><i class="bi bi-file-earmark-pdf-fill text-danger me-2 fs-4"></i><b>${hc.pdfName || 'Documento.pdf'}</b></div>
-              <a href="${hc.pdfData}" download="${hc.pdfName || 'examen.pdf'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-download me-1"></i> Descargar PDF</a>
+              <a href="${hc.pdfData}" download="${hc.pdfName || 'archivo.pdf'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-download me-1"></i> Descargar Archivo</a>
             </div>`;
         }
 
@@ -591,32 +793,42 @@
               <p class="text-muted mb-0">Fecha de Apertura: ${hc.fechaApertura || 'N/A'}</p>
             </div>
 
-            <h5 class="text-secondary border-bottom pb-2">1. Datos Personales</h5>
+            <h5 class="text-secondary border-bottom pb-2">1. Datos del Paciente</h5>
             <div class="row g-2 mb-3">
               <div class="col-md-4"><b>Cédula:</b> ${cedula}</div>
               <div class="col-md-4"><b>Edad:</b> ${hc.edad || 'N/A'} años</div>
               <div class="col-md-4"><b>Género:</b> ${hc.genero || 'N/A'}</div>
+              <div class="col-md-4"><b>Celular:</b> ${hc.celular || 'N/A'}</div>
               <div class="col-md-4"><b>Ocupación:</b> ${hc.ocupacion || 'N/A'}</div>
               <div class="col-md-4"><b>Médico:</b> ${hc.medico || 'N/A'}</div>
-              <div class="col-12"><b>Diag. Médico:</b> ${hc.diagMedico || 'N/A'}</div>
-              <div class="col-12"><b>Motivo:</b> ${hc.motivo || 'N/A'}</div>
+              <div class="col-12"><b>Diagnóstico Médico:</b> ${hc.diagMedico || 'N/A'}</div>
+              <div class="col-12"><b>Motivo de Consulta:</b> ${hc.motivo || 'N/A'}</div>
             </div>
 
-            <h5 class="text-secondary border-bottom pb-2">2. Antecedentes y Examen Físico</h5>
+            <h5 class="text-secondary border-bottom pb-2">2. Antecedentes</h5>
             <div class="row g-2 mb-3">
-              <div class="col-md-6"><b>Previas:</b> ${hc.enfermedadesPrevias || 'N/A'}</div>
+              <div class="col-md-6"><b>Enfermedades Previas:</b> ${hc.enfermedadesPrevias || 'N/A'}</div>
               <div class="col-md-6"><b>Quirúrgicas:</b> ${hc.quirurgicas || 'N/A'}</div>
-              <div class="col-md-6"><b>Síntomas:</b> ${hc.sintomas || 'N/A'}</div>
-              <div class="col-md-6"><b>Nivel Dolor (EVA):</b> <span class="badge bg-danger">${hc.dolor || '0'}/10</span></div>
+              <div class="col-md-6"><b>Medicamentos:</b> ${hc.medicamentos || 'N/A'}</div>
+              <div class="col-md-6"><b>Alergias:</b> ${hc.alergias || 'N/A'}</div>
+              <div class="col-12"><b>Familiares:</b> ${hc.antecedentesFam || 'N/A'}</div>
             </div>
 
-            <h5 class="text-secondary border-bottom pb-2">3. Archivo PDF Adjunto</h5>
+            <h5 class="text-secondary border-bottom pb-2">3. Enfermedad Actual y Examen Físico</h5>
+            <div class="row g-2 mb-3">
+              <div class="col-md-8"><b>Síntomas:</b> ${hc.sintomas || 'N/A'}</div>
+              <div class="col-md-4"><b>Escala de Dolor (EVA):</b> <span class="badge bg-danger">${hc.dolor || '0'}/10</span></div>
+              <div class="col-md-6"><b>Ayudas Técnicas:</b> ${hc.ayudasTecnicas || 'N/A'}</div>
+              <div class="col-md-6"><b>Marcha:</b> ${hc.marcha || 'N/A'}</div>
+            </div>
+
+            <h5 class="text-secondary border-bottom pb-2">4. Imágenes / Exámenes Adjuntos</h5>
             <div class="mb-3">${pdfHtml}</div>
 
-            <h5 class="text-secondary border-bottom pb-2">4. Diagnóstico y Plan</h5>
-            <div class="mb-2"><b>Diag. Fisioterapéutico:</b> ${hc.diagFisio || 'N/A'}</div>
+            <h5 class="text-secondary border-bottom pb-2">5. Diagnóstico Fisioterapéutico y Tratamiento</h5>
+            <div class="mb-2"><b>Diagnóstico Fisioterapéutico:</b> ${hc.diagFisio || 'N/A'}</div>
             <div class="mb-2"><b>Tratamiento:</b> ${hc.tratamiento || 'N/A'}</div>
-            <div><b>Ejercicios en Casa:</b> ${hc.ejerciciosCasa || 'N/A'}</div>
+            <div class="mb-2"><b>Ejercicios en Casa para el Paciente:</b> ${hc.ejerciciosCasa || 'N/A'}</div>
           </div>
         `;
       } catch(e) {
@@ -651,7 +863,7 @@
         alert('¡Registro actualizado exitosamente!');
       } else {
         lista.push(sesionData);
-        alert('¡Cita y pago guardados exitosamente!');
+        alert('¡Cita, evolución y pago guardados exitosamente!');
       }
 
       localStorage.setItem(key, JSON.stringify(lista));
@@ -667,7 +879,7 @@
       const lista = JSON.parse(localStorage.getItem('seguimientos_' + cedula)) || [];
 
       if(lista.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin registros de citas aún</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin registros de sesiones aún</td></tr>';
         return;
       }
 
@@ -699,7 +911,7 @@
       document.getElementById('segPago').value = sesion.pago;
       document.getElementById('segEvolucion').value = sesion.evolucion;
 
-      document.getElementById('tituloFormSeguimiento').innerText = 'Editar Cita o Pago';
+      document.getElementById('tituloFormSeguimiento').innerText = 'Editar Registro de Sesión';
       document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-check-circle me-1"></i> Actualizar';
       document.getElementById('btnCancelarEditSeg').classList.remove('d-none');
     }
@@ -710,6 +922,15 @@
       document.getElementById('tituloFormSeguimiento').innerText = 'Registrar Nueva Sesión / Agendamiento';
       document.getElementById('btnGuardarSeg').innerHTML = '<i class="bi bi-plus-circle me-1"></i> Guardar Registro';
       document.getElementById('btnCancelarEditSeg').classList.add('d-none');
+    }
+
+    function enviarRecordatorioSMS() {
+      const fecha = document.getElementById('segFecha').value;
+      if (!fecha) {
+        alert('Por favor selecciona una fecha y hora para la cita.');
+        return;
+      }
+      alert('📱 Recordatorio SMS simulado enviado con éxito al celular del paciente para la fecha: ' + fecha.replace('T', ' '));
     }
 
     async function cargarAgendaGlobal() {
