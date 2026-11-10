@@ -3,72 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FisioNeuro - Ingreso al Sistema</title>
+  <title>FisioNeuro - Acceso al Sistema</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    body { background-color: #f8fafc; font-family: 'Segoe UI', system-ui, sans-serif; }
-    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .login-card { width: 100%; max-width: 420px; padding: 2.5rem; border-radius: 16px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    body { background-color: #f1f5f9; height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .login-card { width: 100%; max-width: 420px; border: none; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); background: white; padding: 2rem; }
   </style>
 </head>
 <body>
-  <div class="container login-container">
-    <div class="login-card">
-      <div class="text-center mb-4">
-        <h3 class="text-primary fw-bold"><i class="bi bi-heart-pulse-fill me-2"></i>FisioNeuro</h3>
-        <p class="text-muted small">Acceso al Sistema de Gestión Médica</p>
+
+  <div class="card login-card">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold text-primary"><i class="bi bi-heart-pulse-fill me-2"></i>FisioNeuro</h3>
+      <p class="text-muted small">Acceso al Sistema de Gestión Médica</p>
+    </div>
+
+    <form id="formLogin">
+      <div class="mb-3">
+        <label class="form-label fw-bold small">Tipo de Usuario</label>
+        <select id="tipoUsuario" class="form-select" onchange="cambiarPlaceholder()">
+          <option value="especialista">Administrador / Especialista</option>
+          <option value="paciente">Paciente</option>
+        </select>
       </div>
 
-      <form id="formLogin" onsubmit="iniciarSesion(event)">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Tipo de Usuario</label>
-          <select id="loginRol" class="form-select" onchange="cambiarTipoLogin(this.value)" required>
-            <option value="admin">Administrador / Especialista</option>
-            <option value="paciente">Paciente</option>
-          </select>
-        </div>
+      <div class="mb-3">
+        <label id="labelIdentificador" class="form-label fw-bold small">Correo Electrónico</label>
+        <input type="text" id="identificador" class="form-control" placeholder="admin@fisioneuro.com" required>
+      </div>
 
-        <div class="mb-3">
-          <label id="lblUsuario" class="form-label fw-bold">Correo Electrónico</label>
-          <input type="text" id="loginUsuario" class="form-control" placeholder="admin@fisioneuro.com" required>
-        </div>
+      <div class="mb-4">
+        <label class="form-label fw-bold small">Contraseña / Cédula</label>
+        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+      </div>
 
-        <div class="mb-4">
-          <label class="form-label fw-bold">Contraseña / Cédula</label>
-          <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-          <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
-        </button>
-      </form>
-    </div>
+      <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+      </button>
+    </form>
   </div>
 
   <script>
-    function cambiarTipoLogin(rol) {
-      const lblUsuario = document.getElementById('lblUsuario');
-      const inputUsuario = document.getElementById('loginUsuario');
-      if (rol === 'paciente') {
-        lblUsuario.innerText = 'Cédula o Correo';
-        inputUsuario.placeholder = 'Número de cédula';
+    function cambiarPlaceholder() {
+      const tipo = document.getElementById('tipoUsuario').value;
+      const label = document.getElementById('labelIdentificador');
+      const input = document.getElementById('identificador');
+
+      if (tipo === 'paciente') {
+        label.innerText = 'Cédula de Identidad';
+        input.placeholder = 'Ingrese su número de cédula';
       } else {
-        lblUsuario.innerText = 'Correo Electrónico';
-        inputUsuario.placeholder = 'admin@fisioneuro.com';
+        label.innerText = 'Correo Electrónico';
+        input.placeholder = 'admin@fisioneuro.com';
       }
     }
 
-    async function iniciarSesion(e) {
+    document.getElementById('formLogin').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const usuario = document.getElementById('loginUsuario').value.trim();
-      const password = document.getElementById('loginPassword').value.trim();
+      
+      const identificador = document.getElementById('identificador').value.trim();
+      const password = document.getElementById('password').value.trim();
 
       try {
         const response = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ usuario, password })
+          body: JSON.stringify({ usuario: identificador, password: password })
         });
 
         const data = await response.json();
@@ -77,18 +78,21 @@
           return;
         }
 
+        // Guardar sesión activa en el navegador
         localStorage.setItem('usuarioSesion', JSON.stringify(data));
 
+        // Redirección inteligente según el rol devuelto por la base de datos
         if (data.rol === 'paciente') {
           window.location.href = 'paciente.html';
         } else {
           window.location.href = 'especialista.html';
         }
+
       } catch (err) {
         console.error(err);
         alert('Error de conexión con el servidor.');
       }
-    }
+    });
   </script>
 </body>
 </html>
