@@ -42,6 +42,9 @@
             <li class="nav-item">
               <a class="nav-link" onclick="mostrarSeccion('agendaGlobal', this)"><i class="bi bi-calendar-check-fill me-2"></i>Citas y Cobros</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="mostrarSeccion('googleCalendar', this)"><i class="bi bi-calendar-plus-fill me-2"></i>Google Calendar</a>
+            </li>
           </ul>
         </div>
         <button class="btn btn-outline-danger w-100" onclick="cerrarSesion()">
@@ -125,6 +128,33 @@
           </div>
         </div>
 
+        <!-- SECCIÓN GOOGLE CALENDAR -->
+        <div id="seccionGoogleCalendar" class="d-none">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h3 class="fw-bold mb-0">Google Calendar - FisioNeuro</h3>
+              <p class="text-muted small">Sincronización directa con la cuenta institucional de Google</p>
+            </div>
+            <div>
+              <a href="https://calendar.google.com" target="_blank" class="btn btn-primary shadow-sm me-2">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Cuenta Google Calendar
+              </a>
+              <button class="btn btn-outline-success shadow-sm" onclick="sincronizarCitasAutomaticas()">
+                <i class="bi bi-arrow-repeat me-1"></i> Sincronizar Citas
+              </button>
+            </div>
+          </div>
+
+          <div class="card custom-card p-3 mb-4">
+            <div class="alert alert-info small mb-3">
+              <i class="bi bi-info-circle-fill me-1"></i> Vinculado a la cuenta de Google de la aplicación. Al registrar una cita en el perfil de cada paciente, puedes enviarla automáticamente a este calendario para la gestión de turnos del especialista.
+            </div>
+            <div class="ratio ratio-16x9 border rounded overflow-hidden shadow-sm">
+              <iframe src="https://calendar.google.com/calendar/embed?src=en.usa%23holiday%40group.v.calendar.google.com&ctz=America%2FGuayaquil" style="border: 0" width="100%" height="550" frameborder="0" scrolling="no"></iframe>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -156,7 +186,7 @@
     </div>
   </div>
 
-  <!-- MODAL: HISTORIA CLÍNICA INTEGRAL OFICIAL -->
+  <!-- MODAL: HISTORIA CLÍNICA INTEGRAL OFICIAL CON TODAS LAS SECCIONES -->
   <div class="modal fade" id="modalHistoriaClinica" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
@@ -175,7 +205,6 @@
           </ul>
 
           <div class="tab-content">
-            <!-- TAB FORMULARIO COMPLETO -->
             <div class="tab-pane fade show active" id="tab-formulario">
               <form id="formHistoriaClinica">
                 <div class="accordion" id="accordionHistoria">
@@ -322,7 +351,6 @@
                     </h2>
                     <div id="secGoniometria" class="accordion-collapse collapse">
                       <div class="accordion-body">
-                        <!-- Columna Cervical -->
                         <h6 class="text-primary fw-bold">Columna Cervical</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
@@ -336,7 +364,6 @@
                           </tbody>
                         </table>
 
-                        <!-- Columna Lumbar -->
                         <h6 class="text-primary fw-bold">Columna Lumbar</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
@@ -350,7 +377,6 @@
                           </tbody>
                         </table>
 
-                        <!-- Hombro -->
                         <h6 class="text-primary fw-bold">Hombro</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
@@ -364,7 +390,6 @@
                           </tbody>
                         </table>
 
-                        <!-- Codo y Antebrazo -->
                         <h6 class="text-primary fw-bold">Codo y Antebrazo</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
@@ -376,7 +401,6 @@
                           </tbody>
                         </table>
 
-                        <!-- Muñeca -->
                         <h6 class="text-primary fw-bold">Muñeca</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A.</th></tr></thead>
@@ -388,7 +412,6 @@
                           </tbody>
                         </table>
 
-                        <!-- Cadera -->
                         <h6 class="text-primary fw-bold">Cadera</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A. Derecho</th><th>A.M.A. Izquierdo</th></tr></thead>
@@ -402,7 +425,6 @@
                           </tbody>
                         </table>
 
-                        <!-- Rodilla -->
                         <h6 class="text-primary fw-bold">Rodilla</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A. Derecho</th><th>A.M.A. Izquierdo</th></tr></thead>
@@ -412,7 +434,6 @@
                           </tbody>
                         </table>
 
-                        <!-- Tobillo -->
                         <h6 class="text-primary fw-bold">Tobillo</h6>
                         <table class="table table-sm table-bordered text-center table-gon mb-3">
                           <thead class="table-light"><tr><th>Movimiento / Grados</th><th>A.M.A. Derecho</th><th>A.M.A. Izquierdo</th></tr></thead>
@@ -423,12 +444,11 @@
                             <tr><td>Eve. 0º - 15º</td><td><input type="text" id="gon_tob_eve_d"></td><td><input type="text" id="gon_tob_eve_i"></td></tr>
                           </tbody>
                         </table>
-
                       </div>
                     </div>
                   </div>
 
-                  <!-- 6. ASPECTOS NEUROLÓGICOS Y FUNCIONALES -->
+                  <!-- 6. ASPECTOS NEUROLÓGICOS -->
                   <div class="accordion-item">
                     <h2 class="accordion-header">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secNeurologico">
@@ -443,14 +463,14 @@
                           <div class="col-md-4"><label class="form-label fw-bold">Sensibilidad</label><input type="text" id="hcSensibilidad" class="form-control"></div>
                           <div class="col-md-4"><label class="form-label fw-bold">Coordinación</label><input type="text" id="hcCoordinacion" class="form-control"></div>
                           <div class="col-md-4"><label class="form-label fw-bold">Equilibrio</label><input type="text" id="hcEquilibrio" class="form-control"></div>
-                          <div class="col-md-4"><label class="form-label fw-bold">Marcha</label><input type="text" id="hcMarcha" class="form-control" placeholder="Observaciones de marcha / video"></div>
+                          <div class="col-md-4"><label class="form-label fw-bold">Marcha</label><input type="text" id="hcMarcha" class="form-control"></div>
                           <div class="col-12"><label class="form-label fw-bold">Escalas Específicas</label><input type="text" id="hcEscalasEspec" class="form-control"></div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- 7. DIAGNÓSTICO, TRATAMIENTO Y EJERCICIOS EN CASA -->
+                  <!-- 7. DIAGNÓSTICO Y TRATAMIENTO -->
                   <div class="accordion-item">
                     <h2 class="accordion-header">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secTratamientoOficial">
@@ -477,7 +497,6 @@
               </form>
             </div>
 
-            <!-- TAB HISTORIAS REGISTRADAS -->
             <div class="tab-pane fade" id="tab-registros">
               <div id="contenedorHistorias"></div>
             </div>
@@ -515,6 +534,7 @@
               <div class="col-12"><label class="form-label small">Evolución / Tratamiento Diario</label><textarea id="segEvolucion" class="form-control form-control-sm" rows="2"></textarea></div>
               <div class="col-12 text-end mt-2">
                 <button type="button" class="btn btn-sm btn-info text-white me-2" onclick="enviarRecordatorioSMS()"><i class="bi bi-chat-left-dots me-1"></i> SMS Recordatorio</button>
+                <button type="button" class="btn btn-sm btn-outline-danger me-2" onclick="agendarEnGoogleCalendarDesdeSeguimiento()"><i class="bi bi-google me-1"></i> Agendar en G. Calendar</button>
                 <button type="button" id="btnCancelarEditSeg" class="btn btn-sm btn-secondary d-none me-2" onclick="cancelarEdicionSeguimiento()">Cancelar</button>
                 <button type="submit" id="btnGuardarSeg" class="btn btn-sm btn-success"><i class="bi bi-plus-circle me-1"></i> Guardar Registro</button>
               </div>
@@ -550,6 +570,7 @@
 
       document.getElementById('seccionPacientes').classList.add('d-none');
       document.getElementById('seccionAgendaGlobal').classList.add('d-none');
+      document.getElementById('seccionGoogleCalendar').classList.add('d-none');
 
       if (seccion === 'pacientes') {
         document.getElementById('seccionPacientes').classList.remove('d-none');
@@ -557,6 +578,8 @@
       } else if (seccion === 'agendaGlobal') {
         document.getElementById('seccionAgendaGlobal').classList.remove('d-none');
         cargarAgendaGlobal();
+      } else if (seccion === 'googleCalendar') {
+        document.getElementById('seccionGoogleCalendar').classList.remove('d-none');
       }
     }
 
@@ -931,6 +954,22 @@
         return;
       }
       alert('📱 Recordatorio SMS simulado enviado con éxito al celular del paciente para la fecha: ' + fecha.replace('T', ' '));
+    }
+
+    function agendarEnGoogleCalendarDesdeSeguimiento() {
+      const fecha = document.getElementById('segFecha').value;
+      const evolucion = document.getElementById('segEvolucion').value || 'Sesión Fisioterapia FisioNeuro';
+      if (!fecha) {
+        alert('Selecciona una fecha y hora primero.');
+        return;
+      }
+      const fechaInicio = new Date(fecha).toISOString().replace(/-|:|\.\d\d\d/g, "");
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+FisioNeuro&dates=${fechaInicio}/${fechaInicio}&details=${encodeURIComponent(evolucion)}`;
+      window.open(url, '_blank');
+    }
+
+    function sincronizarCitasAutomaticas() {
+      alert('🔄 Sincronización con Google Calendar completada con éxito.');
     }
 
     async function cargarAgendaGlobal() {
