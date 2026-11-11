@@ -152,8 +152,8 @@
             <div class="alert alert-info small mb-3">
               <i class="bi bi-info-circle-fill me-1"></i> Este visor muestra directamente la agenda de <b>fisioneuroecu@gmail.com</b>. Asegúrate de tener iniciada sesión con esta cuenta en tu navegador.
             </div>
-            <div class="ratio ratio-16x9 border rounded overflow-hidden shadow-sm">
-              <iframe src="https://calendar.google.com/calendar/embed?src=fisioneuroecu%40gmail.com&ctz=America%2FGuayaquil" style="border: 0" width="100%" height="550" frameborder="0" scrolling="no"></iframe>
+            <div class="ratio ratio-16x9 border rounded overflow-hidden shadow-sm" id="contenedorVisorCalendar">
+              <iframe id="iframeGoogleCalendar" src="https://calendar.google.com/calendar/embed?src=fisioneuroecu%40gmail.com&ctz=America%2FGuayaquil" style="border: 0" width="100%" height="550" frameborder="0" scrolling="no"></iframe>
             </div>
           </div>
         </div>
@@ -198,9 +198,14 @@
               <textarea id="ocasionalEvolucion" class="form-control" rows="2" placeholder="Evaluación o tratamiento rápido..."></textarea>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-success">Guardar Cita</button>
+          <div class="modal-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="agendarEnGoogleCalendarOcasional()">
+              <i class="bi bi-google me-1"></i> Agendar en G. Calendar
+            </button>
+            <div>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar Cita</button>
+            </div>
           </div>
         </form>
       </div>
@@ -234,7 +239,7 @@
     </div>
   </div>
 
-  <!-- MODAL: HISTORIA CLÍNICA INTEGRAL OFICIAL CON TODAS LAS SECCIONES -->
+  <!-- MODAL: HISTORIA CLÍNICA INTEGRAL OFICIAL CON SEGUIMIENTOS EN PDF -->
   <div class="modal fade" id="modalHistoriaClinica" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
@@ -242,14 +247,14 @@
           <h5 class="modal-title"><i class="bi bi-journal-medical me-2"></i>Historia Clínica de Fisioterapia</h5>
           <div>
             <button class="btn btn-sm btn-light me-2" onclick="imprimirHistoria()"><i class="bi bi-printer me-1"></i> Imprimir</button>
-            <button class="btn btn-sm btn-outline-light me-3" onclick="exportarPDF()"><i class="bi bi-file-earmark-pdf me-1"></i> PDF</button>
+            <button class="btn btn-sm btn-outline-light me-3" onclick="exportarPDF()"><i class="bi bi-file-earmark-pdf me-1"></i> PDF (Completo con Seguimientos)</button>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
         </div>
         <div class="modal-body">
           <ul class="nav nav-tabs mb-3" id="historiaTabs" role="tablist">
             <li class="nav-item"><button class="nav-link active" id="btn-tab-form" data-bs-toggle="tab" data-bs-target="#tab-formulario">Formulario Completo</button></li>
-            <li class="nav-item"><button class="nav-link" id="btn-tab-registros" data-bs-toggle="tab" data-bs-target="#tab-registros">📋 Historias Registradas</button></li>
+            <li class="nav-item"><button class="nav-link" id="btn-tab-registros" data-bs-toggle="tab" data-bs-target="#tab-registros">📋 Expediente y Seguimientos (PDF)</button></li>
           </ul>
 
           <div class="tab-content">
@@ -628,6 +633,7 @@
         cargarAgendaGlobal();
       } else if (seccion === 'googleCalendar') {
         document.getElementById('seccionGoogleCalendar').classList.remove('d-none');
+        sincronizarCitasAutomaticas();
       }
     }
 
@@ -837,74 +843,121 @@
       }
     });
 
+    // FUNCIÓN ACTUALIZADA: Integra la Historia Clínica + Hojas de Seguimiento para el PDF
     function cargarVistaHistorias(cedula) {
       const datosGuardados = localStorage.getItem('historia_' + cedula);
+      const seguimientos = JSON.parse(localStorage.getItem('seguimientos_' + cedula)) || [];
       const contenedor = document.getElementById('contenedorHistorias');
 
-      if (!datosGuardados) {
-        contenedor.innerHTML = '<div class="alert alert-info text-center">No hay registros de Historia Clínica guardados para este paciente.</div>';
+      if (!datosGuardados && seguimientos.length === 0) {
+        contenedor.innerHTML = '<div class="alert alert-info text-center">No hay registros de Historia Clínica ni seguimientos guardados para este paciente.</div>';
         return;
       }
 
-      try {
-        const hc = JSON.parse(datosGuardados);
-        let pdfHtml = '<p class="text-muted">Sin archivos o imágenes adjuntas.</p>';
-        if (hc.pdfData) {
-          pdfHtml = `
-            <div class="alert alert-light border d-flex justify-content-between align-items-center">
-              <div><i class="bi bi-file-earmark-pdf-fill text-danger me-2 fs-4"></i><b>${hc.pdfName || 'Documento.pdf'}</b></div>
-              <a href="${hc.pdfData}" download="${hc.pdfName || 'archivo.pdf'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-download me-1"></i> Descargar Archivo</a>
-            </div>`;
+      let htmlContent = '';
+
+      if (datosGuardados) {
+        try {
+          const hc = JSON.parse(datosGuardados);
+          let pdfHtml = '<p class="text-muted">Sin archivos o imágenes adjuntas.</p>';
+          if (hc.pdfData) {
+            pdfHtml = `
+              <div class="alert alert-light border d-flex justify-content-between align-items-center">
+                <div><i class="bi bi-file-earmark-pdf-fill text-danger me-2 fs-4"></i><b>${hc.pdfName || 'Documento.pdf'}</b></div>
+                <a href="${hc.pdfData}" download="${hc.pdfName || 'archivo.pdf'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-download me-1"></i> Descargar Archivo</a>
+              </div>`;
+          }
+
+          htmlContent += `
+            <div class="card border-primary p-4 bg-white shadow-sm mb-4">
+              <div class="border-bottom pb-3 mb-3 text-center">
+                <h4 class="fw-bold text-primary mb-1">HISTORIA CLÍNICA DE FISIOTERAPIA</h4>
+                <p class="text-muted mb-0">Fecha de Apertura: ${hc.fechaApertura || 'N/A'}</p>
+              </div>
+
+              <h5 class="text-secondary border-bottom pb-2">1. Datos del Paciente</h5>
+              <div class="row g-2 mb-3">
+                <div class="col-md-4"><b>Cédula:</b> ${cedula}</div>
+                <div class="col-md-4"><b>Edad:</b> ${hc.edad || 'N/A'} años</div>
+                <div class="col-md-4"><b>Género:</b> ${hc.genero || 'N/A'}</div>
+                <div class="col-md-4"><b>Celular:</b> ${hc.celular || 'N/A'}</div>
+                <div class="col-md-4"><b>Ocupación:</b> ${hc.ocupacion || 'N/A'}</div>
+                <div class="col-md-4"><b>Médico:</b> ${hc.medico || 'N/A'}</div>
+                <div class="col-12"><b>Diagnóstico Médico:</b> ${hc.diagMedico || 'N/A'}</div>
+                <div class="col-12"><b>Motivo de Consulta:</b> ${hc.motivo || 'N/A'}</div>
+              </div>
+
+              <h5 class="text-secondary border-bottom pb-2">2. Antecedentes</h5>
+              <div class="row g-2 mb-3">
+                <div class="col-md-6"><b>Enfermedades Previas:</b> ${hc.enfermedadesPrevias || 'N/A'}</div>
+                <div class="col-md-6"><b>Quirúrgicas:</b> ${hc.quirurgicas || 'N/A'}</div>
+                <div class="col-md-6"><b>Medicamentos:</b> ${hc.medicamentos || 'N/A'}</div>
+                <div class="col-md-6"><b>Alergias:</b> ${hc.alergias || 'N/A'}</div>
+                <div class="col-12"><b>Familiares:</b> ${hc.antecedentesFam || 'N/A'}</div>
+              </div>
+
+              <h5 class="text-secondary border-bottom pb-2">3. Enfermedad Actual y Examen Físico</h5>
+              <div class="row g-2 mb-3">
+                <div class="col-md-8"><b>Síntomas:</b> ${hc.sintomas || 'N/A'}</div>
+                <div class="col-md-4"><b>Escala de Dolor (EVA):</b> <span class="badge bg-danger">${hc.dolor || '0'}/10</span></div>
+                <div class="col-md-6"><b>Ayudas Técnicas:</b> ${hc.ayudasTecnicas || 'N/A'}</div>
+                <div class="col-md-6"><b>Marcha:</b> ${hc.marcha || 'N/A'}</div>
+              </div>
+
+              <h5 class="text-secondary border-bottom pb-2">4. Imágenes / Exámenes Adjuntos</h5>
+              <div class="mb-3">${pdfHtml}</div>
+
+              <h5 class="text-secondary border-bottom pb-2">5. Diagnóstico Fisioterapéutico y Tratamiento</h5>
+              <div class="mb-2"><b>Diagnóstico Fisioterapéutico:</b> ${hc.diagFisio || 'N/A'}</div>
+              <div class="mb-2"><b>Tratamiento:</b> ${hc.tratamiento || 'N/A'}</div>
+              <div class="mb-2"><b>Ejercicios en Casa para el Paciente:</b> ${hc.ejerciciosCasa || 'N/A'}</div>
+            </div>
+          `;
+        } catch(e) {
+          console.error("Error al procesar historia:", e);
         }
+      }
 
-        contenedor.innerHTML = `
-          <div class="card border-primary p-4 bg-white shadow-sm">
-            <div class="border-bottom pb-3 mb-3 text-center">
-              <h4 class="fw-bold text-primary mb-1">HISTORIA CLÍNICA DE FISIOTERAPIA</h4>
-              <p class="text-muted mb-0">Fecha de Apertura: ${hc.fechaApertura || 'N/A'}</p>
+      // Sección automática de Seguimientos / Evolución que aparecerá en las páginas siguientes del PDF
+      if (seguimientos.length > 0) {
+        let rowsSeg = '';
+        seguimientos.forEach((s, idx) => {
+          rowsSeg += `
+            <tr>
+              <td><b>#${idx + 1}</b> - ${s.fecha ? s.fecha.replace('T', ' ') : 'S/F'}</td>
+              <td><span class="badge bg-success">${s.asistencia}</span></td>
+              <td>${s.evolucion || 'Sin nota de evolución'}</td>
+              <td class="fw-bold text-success">$${parseFloat(s.pago || 0).toFixed(2)}</td>
+            </tr>
+          `;
+        });
+
+        htmlContent += `
+          <div class="card border-success p-4 bg-white shadow-sm mt-4" style="page-break-before: always;">
+            <div class="border-bottom pb-2 mb-3 text-center">
+              <h4 class="fw-bold text-success mb-1">HOJAS DE SEGUIMIENTO Y EVOLUCIÓN CLÍNICA</h4>
+              <p class="text-muted small mb-0">Historial de sesiones, notas y pagos registrados</p>
             </div>
-
-            <h5 class="text-secondary border-bottom pb-2">1. Datos del Paciente</h5>
-            <div class="row g-2 mb-3">
-              <div class="col-md-4"><b>Cédula:</b> ${cedula}</div>
-              <div class="col-md-4"><b>Edad:</b> ${hc.edad || 'N/A'} años</div>
-              <div class="col-md-4"><b>Género:</b> ${hc.genero || 'N/A'}</div>
-              <div class="col-md-4"><b>Celular:</b> ${hc.celular || 'N/A'}</div>
-              <div class="col-md-4"><b>Ocupación:</b> ${hc.ocupacion || 'N/A'}</div>
-              <div class="col-md-4"><b>Médico:</b> ${hc.medico || 'N/A'}</div>
-              <div class="col-12"><b>Diagnóstico Médico:</b> ${hc.diagMedico || 'N/A'}</div>
-              <div class="col-12"><b>Motivo de Consulta:</b> ${hc.motivo || 'N/A'}</div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped align-middle">
+                <thead class="table-success">
+                  <tr>
+                    <th>Fecha y Hora</th>
+                    <th>Estado</th>
+                    <th>Evolución / Tratamiento Diario</th>
+                    <th>Pago</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsSeg}
+                </tbody>
+              </table>
             </div>
-
-            <h5 class="text-secondary border-bottom pb-2">2. Antecedentes</h5>
-            <div class="row g-2 mb-3">
-              <div class="col-md-6"><b>Enfermedades Previas:</b> ${hc.enfermedadesPrevias || 'N/A'}</div>
-              <div class="col-md-6"><b>Quirúrgicas:</b> ${hc.quirurgicas || 'N/A'}</div>
-              <div class="col-md-6"><b>Medicamentos:</b> ${hc.medicamentos || 'N/A'}</div>
-              <div class="col-md-6"><b>Alergias:</b> ${hc.alergias || 'N/A'}</div>
-              <div class="col-12"><b>Familiares:</b> ${hc.antecedentesFam || 'N/A'}</div>
-            </div>
-
-            <h5 class="text-secondary border-bottom pb-2">3. Enfermedad Actual y Examen Físico</h5>
-            <div class="row g-2 mb-3">
-              <div class="col-md-8"><b>Síntomas:</b> ${hc.sintomas || 'N/A'}</div>
-              <div class="col-md-4"><b>Escala de Dolor (EVA):</b> <span class="badge bg-danger">${hc.dolor || '0'}/10</span></div>
-              <div class="col-md-6"><b>Ayudas Técnicas:</b> ${hc.ayudasTecnicas || 'N/A'}</div>
-              <div class="col-md-6"><b>Marcha:</b> ${hc.marcha || 'N/A'}</div>
-            </div>
-
-            <h5 class="text-secondary border-bottom pb-2">4. Imágenes / Exámenes Adjuntos</h5>
-            <div class="mb-3">${pdfHtml}</div>
-
-            <h5 class="text-secondary border-bottom pb-2">5. Diagnóstico Fisioterapéutico y Tratamiento</h5>
-            <div class="mb-2"><b>Diagnóstico Fisioterapéutico:</b> ${hc.diagFisio || 'N/A'}</div>
-            <div class="mb-2"><b>Tratamiento:</b> ${hc.tratamiento || 'N/A'}</div>
-            <div class="mb-2"><b>Ejercicios en Casa para el Paciente:</b> ${hc.ejerciciosCasa || 'N/A'}</div>
           </div>
         `;
-      } catch(e) {
-        contenedor.innerHTML = `<div class="alert alert-secondary">${datosGuardados}</div>`;
       }
+
+      contenedor.innerHTML = htmlContent;
     }
 
     function abrirSeguimiento(cedula) {
@@ -1016,6 +1069,19 @@
       window.open(url, '_blank');
     }
 
+    function agendarEnGoogleCalendarOcasional() {
+      const nombre = document.getElementById('ocasionalNombre').value.trim() || 'Paciente Ocasional';
+      const fecha = document.getElementById('ocasionalFecha').value;
+      const evolucion = document.getElementById('ocasionalEvolucion').value.trim() || 'Cita Ocasional FisioNeuro';
+      if (!fecha) {
+        alert('Por favor ingresa primero el nombre y la fecha de la cita.');
+        return;
+      }
+      const fechaInicio = new Date(fecha).toISOString().replace(/-|:|\.\d\d\d/g, "");
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+Ocasional:+${encodeURIComponent(nombre)}&dates=${fechaInicio}/${fechaInicio}&details=${encodeURIComponent(evolucion)}`;
+      window.open(url, '_blank');
+    }
+
     function guardarCitaOcasional(e) {
       e.preventDefault();
       const nombre = document.getElementById('ocasionalNombre').value.trim();
@@ -1042,7 +1108,11 @@
     }
 
     function sincronizarCitasAutomaticas() {
-      alert('🔄 Sincronización con Google Calendar para la cuenta fisioneuroecu@gmail.com completada con éxito.');
+      const iframe = document.getElementById('iframeGoogleCalendar');
+      if (iframe) {
+        iframe.src = iframe.src;
+      }
+      alert('🔄 Sincronización del calendario con la cuenta fisioneuroecu@gmail.com actualizada.');
     }
 
     async function cargarAgendaGlobal() {
@@ -1057,7 +1127,6 @@
         let citasPendientes = 0;
         let count = 0;
 
-        // 1. Cargar citas de pacientes regulares de la BD
         if (Array.isArray(pacientes)) {
           pacientes.forEach(p => {
             const segs = JSON.parse(localStorage.getItem('seguimientos_' + p.cedula)) || [];
@@ -1079,7 +1148,6 @@
           });
         }
 
-        // 2. Cargar citas de pacientes ocasionales
         const ocasionales = JSON.parse(localStorage.getItem('citas_ocasionales')) || [];
         ocasionales.forEach(s => {
           count++;
@@ -1123,7 +1191,7 @@
         const cedula = document.getElementById('hcCedula').value;
         const opt = {
           margin: 0.5,
-          filename: `Historia_Clinica_${cedula}.pdf`,
+          filename: `Expediente_Clinico_${cedula}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 2 },
           jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
